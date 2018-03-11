@@ -1,0 +1,34 @@
+.icon {
+    background-position: center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 48px;
+    vertical-align: top;
+    width: 48px;
+}
+
+.icon-circle {
+    background-image: url('../../img/icon-circle-48.png');
+}
+
+.icon-ok {
+    background-image: url('../../img/icon-ok-48.png');
+}
+
+.icon-run {
+    background-image: url('../../img/icon-run-48.png');
+}
+
+.icon-sm {
+    height: 24px;
+    width: 24px;
+}
+
+.icon-sm-pencil {
+    background-image: url('../../img/icon-pencil-24.png');
+}
+
+.icon-sm-trash {
+    background-image: url('../../img/icon-trash-24.png');
+}
+

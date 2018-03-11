@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Motivator</title>
+        <link href="img/icon-run-48.png" rel="icon">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="src/css/main.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="mt-3">
+                <span class="icon icon-run"></span> Motivator
+            </h1>
+            <div class="form-group">
+                <button class="btn btn-primary" id="add-goal-button">Add goal</button>
+                <button class="btn btn-primary" id="reset-goals-button">Reset goals</button>
+            </div>
+            <table class="table" id="goals-table">
+                <tr>
+                    <th>Complete</th>
+                    <th>Name</th>
+                    <th>Parameters</th>
+                    <th>Reward</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </table>
+        </div>
+        <div class="modal fade" id="goal-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="src/js/main.js" type="module"></script>
+    </body>
+</html>
+
