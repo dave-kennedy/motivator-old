@@ -1,3 +1,16 @@
+body {
+    margin-bottom: 4rem;
+    margin-top: 1rem;
+}
+
+.b-3 {
+    bottom: 1rem !important;
+}
+
+.r-3 {
+    right: 1rem !important;
+}
+
 .icon {
     background-position: center;
     background-repeat: no-repeat;
@@ -5,6 +18,10 @@
     height: 48px;
     vertical-align: top;
     width: 48px;
+}
+
+.icon-add {
+    background-image: url('../../img/icon-add-48.png');
 }
 
 .icon-circle {
@@ -17,5 +34,9 @@
 
 .icon-run {
     background-image: url('../../img/icon-run-48.png');
+}
+
+.shadow {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
 }
 

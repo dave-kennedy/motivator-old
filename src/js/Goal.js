@@ -41,7 +41,7 @@ export default class Goal {
         if (this.type == 'startEnd') {
             row.append(`
                 <td>
-                    <span class="mr-3">Start: ${this.start}</span>
+                    Start: ${this.start}<br>
                     End: ${this.end}
                 </td>
             `);
