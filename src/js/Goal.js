@@ -205,11 +205,6 @@ export default class Goal {
         modal.modal();
     }
 
-    reset() {
-        this.complete = false;
-        this.render();
-    }
-
     validate() {
         if (!this.name || !this.type) {
             return false;

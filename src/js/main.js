@@ -10,8 +10,7 @@ function saveGoals() {
 
 let goals = [],
     goalsJson = localStorage.getItem('goals'),
-    addGoalButton = $('#add-goal-button'),
-    resetGoalsButton = $('#reset-goals-button');
+    addGoalButton = $('#add-goal-button');
 
 if (goalsJson) {
     goals = JSON.parse(goalsJson).map(g => new Goal(g));
@@ -23,14 +22,6 @@ if (goalsJson) {
 addGoalButton.on('click', (event) => {
     let goal = new Goal();
     goal.renderForm();
-});
-
-resetGoalsButton.on('click', (event) => {
-    goals.forEach((goal) => {
-        goal.reset();
-    });
-
-    saveGoals();
 });
 
 $(document).on('goal.complete', (event, goal) => {
