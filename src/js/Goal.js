@@ -15,6 +15,10 @@ export default class Goal {
     render() {
         let row = $('<tr></tr>');
 
+        row.on('click', (event) => {
+            this.renderForm();
+        });
+
         let completeInput = $(`
             <td>
                 <input type="checkbox" ${this.complete ? 'checked' : ''}>
@@ -46,7 +50,7 @@ export default class Goal {
         if (this.type == 'duration') {
             row.append(`
                 <td>
-                    ${this.duration}
+                    Duration: ${this.duration}
                 </td>
             `);
         }
@@ -54,37 +58,12 @@ export default class Goal {
         if (this.type == 'reps') {
             row.append(`
                 <td>
-                    ${this.reps}
+                    Reps: ${this.reps}
                 </td>
             `);
         }
 
         row.append(`<td>${this.reward}</td>`);
-
-        let editButton = $(`
-            <td>
-                <span class="icon icon-sm icon-sm-pencil"></span>
-            </td>
-        `);
-
-        editButton.on('click', (event) => {
-            this.renderForm();
-        });
-
-        row.append(editButton);
-
-        let deleteButton = $(`
-            <td>
-                <span class="icon icon-sm icon-sm-trash"></span>
-            </td>
-        `);
-
-        deleteButton.on('click', (event) => {
-            this._row.remove();
-            $(document).trigger('goal.delete', this);
-        });
-
-        row.append(deleteButton);
 
         if (this._row) {
             this._row.replaceWith(row);
@@ -209,7 +188,16 @@ export default class Goal {
 
         form.append(saveButton);
 
-        let cancelButton = $('<button class="btn btn-default" data-dismiss="modal">Cancel</button>');
+        let deleteButton = $('<button class="btn btn-danger mr-3" data-dismiss="modal">Delete</button>');
+
+        deleteButton.on('click', (event) => {
+            this._row.remove();
+            $(document).trigger('goal.delete', this);
+        });
+
+        form.append(deleteButton);
+
+        let cancelButton = $('<button class="btn" data-dismiss="modal">Cancel</button>');
         form.append(cancelButton);
 
         let modal = $('#goal-modal');
