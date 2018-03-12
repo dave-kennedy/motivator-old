@@ -19,18 +19,15 @@ export default class Goal {
             this.renderForm();
         });
 
-        let completeInput = $(`
-            <td>
-                <input type="checkbox" ${this.complete ? 'checked' : ''}>
-            </td>
-        `);
+        let completeSpan = $(`<span class="icon ${this.complete ? 'icon-ok' : 'icon-circle'}"></span>`);
+        row.append($('<td></td>').append(completeSpan));
 
-        completeInput.on('change', (event) => {
-            this.complete = event.target.checked;
+        completeSpan.on('click', (event) => {
+            event.stopPropagation();
+            this.complete = !this.complete;
+            completeSpan.toggleClass('icon-ok').toggleClass('icon-circle');
             $(document).trigger('goal.complete', this);
         });
-
-        row.append(completeInput);
 
         row.append(`<td>${this.name}</td>`);
 
@@ -39,34 +36,22 @@ export default class Goal {
         }
 
         if (this.type == 'startEnd') {
-            row.append(`
-                <td>
-                    Start: ${this.start}<br>
-                    End: ${this.end}
-                </td>
-            `);
+            row.append(`<td>Start: ${this.start}<br>End: ${this.end}</td>`);
         }
 
         if (this.type == 'duration') {
-            row.append(`
-                <td>
-                    Duration: ${this.duration}
-                </td>
-            `);
+            row.append(`<td>Duration: ${this.duration}</td>`);
         }
 
         if (this.type == 'reps') {
-            row.append(`
-                <td>
-                    Reps: ${this.reps}
-                </td>
-            `);
+            row.append(`<td>Reps: ${this.reps}</td>`);
         }
 
         row.append(`<td>${this.reward}</td>`);
 
         if (this._row) {
             this._row.replaceWith(row);
+            this._row = row;
         } else {
             let table = $('#goals-table');
             table.append(row);
@@ -77,104 +62,69 @@ export default class Goal {
     renderForm() {
         let form = $('<form></form>');
 
-        let nameInput = $(`
-            <div class="form-group">
-                <input class="form-control" placeholder="Name" type="text" value="${this.name}">
-            </div>
-        `);
+        let nameInput = $(`<input class="form-control" placeholder="Name" type="text" value="${this.name}">`);
+        form.append($('<div class="form-group"></div>').append(nameInput));
 
         nameInput.on('change', (event) => {
             this.name = event.target.value;
         });
 
-        form.append(nameInput);
-
-        let typeSelect = $(`
-            <div class="form-group">
-                <select class="form-control">
-                    <option value="" disabled selected>Type</option>
-                    <option value="oneTime" ${this.type == 'oneTime' ? 'selected' : ''}>One time</option>
-                    <option value="startEnd" ${this.type == 'startEnd' ? 'selected' : ''}>Start/end</option>
-                    <option value="duration" ${this.type == 'duration' ? 'selected' : ''}>Duration</option>
-                    <option value="reps" ${this.type == 'reps' ? 'selected' : ''}>Reps</option>
-                </select>
-            </div>
-        `);
+        let typeSelect = $('<select class="form-control"></select>');
+        typeSelect.append('<option value="" disabled selected>Type</option>');
+        typeSelect.append(`<option value="oneTime" ${this.type == 'oneTime' ? 'selected' : ''}>One time</option>`);
+        typeSelect.append(`<option value="startEnd" ${this.type == 'startEnd' ? 'selected' : ''}>Start/end</option>`);
+        typeSelect.append(`<option value="duration" ${this.type == 'duration' ? 'selected' : ''}>Duration</option>`);
+        typeSelect.append(`<option value="reps" ${this.type == 'reps' ? 'selected' : ''}>Reps</option>`);
+        form.append($('<div class="form-group"></div>').append(typeSelect));
 
         typeSelect.on('change', (event) => {
             this.type = event.target.value;
             this.renderForm();
         });
 
-        form.append(typeSelect);
-
         if (this.type == 'startEnd') {
-            let startInput = $(`
-                <div class="form-group">
-                    <input class="form-control" placeholder="Start" type="text" value="${this.start}">
-                </div>
-            `);
+            let startInput = $(`<input class="form-control" placeholder="Start" type="text" value="${this.start}">`);
+            form.append($('<div class="form-group"></div>').append(startInput));
 
             startInput.on('change', (event) => {
                 this.start = event.target.value;
             });
 
-            form.append(startInput);
-
-            let endInput = $(`
-                <div class="form-group">
-                    <input class="form-control" placeholder="End" type="text" value="${this.end}">
-                </div>
-            `);
+            let endInput = $(`<input class="form-control" placeholder="End" type="text" value="${this.end}">`);
+            form.append($('<div class="form-group"></div>').append(endInput));
 
             endInput.on('change', (event) => {
                 this.end = event.target.value;
             });
-
-            form.append(endInput);
         }
 
         if (this.type == 'duration') {
-            let durationInput = $(`
-                <div class="form-group">
-                    <input class="form-control" placeholder="Duration" type="text" value="${this.duration}">
-                </div>
-            `);
+            let durationInput = $(`<input class="form-control" placeholder="Duration" type="text" value="${this.duration}">`);
+            form.append($('<div class="form-group"></div>').append(durationInput));
 
             durationInput.on('change', (event) => {
                 this.duration = event.target.value;
             });
-
-            form.append(durationInput);
         }
 
         if (this.type == 'reps') {
-            let repsInput = $(`
-                <div class="form-group">
-                    <input class="form-control" placeholder="Reps" type="text" value="${this.reps}">
-                </div>
-            `);
+            let repsInput = $(`<input class="form-control" placeholder="Reps" type="text" value="${this.reps}">`);
+            form.append($('<div class="form-group"></div>').append(repsInput));
 
             repsInput.on('change', (event) => {
                 this.reps = event.target.value;
             });
-
-            form.append(repsInput);
         }
 
-        let rewardInput = $(`
-            <div class="form-group">
-                <input class="form-control" placeholder="Reward" type="text" value="${this.reward}">
-            </div>
-        `);
+        let rewardInput = $(`<input class="form-control" placeholder="Reward" type="text" value="${this.reward}">`);
+        form.append($('<div class="form-group"></div>').append(rewardInput));
 
         rewardInput.on('change', (event) => {
             this.reward = event.target.value;
         });
 
-        form.append(rewardInput);
-
         let saveButton = $('<button class="btn btn-primary mr-3" data-dismiss="modal">Save</button>');
+        form.append(saveButton);
 
         saveButton.on('click', (event) => {
             if (!this.validate()) {
@@ -186,16 +136,13 @@ export default class Goal {
             $(document).trigger('goal.save', this);
         });
 
-        form.append(saveButton);
-
         let deleteButton = $('<button class="btn btn-danger mr-3" data-dismiss="modal">Delete</button>');
+        form.append(deleteButton);
 
         deleteButton.on('click', (event) => {
             this._row.remove();
             $(document).trigger('goal.delete', this);
         });
-
-        form.append(deleteButton);
 
         let cancelButton = $('<button class="btn" data-dismiss="modal">Cancel</button>');
         form.append(cancelButton);
