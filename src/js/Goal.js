@@ -60,10 +60,14 @@ export default class Goal {
     }
 
     renderForm() {
-        let form = $('<form></form>');
+        let modal = $('#modal');
+
+        modal.find('.modal-title').html('New goal');
+
+        let body = modal.find('.modal-body').html('');
 
         let nameInput = $(`<input class="form-control" placeholder="Name" type="text" value="${this.name}">`);
-        form.append($('<div class="form-group"></div>').append(nameInput));
+        body.append($('<div class="form-group"></div>').append(nameInput));
 
         nameInput.on('change', (event) => {
             this.name = event.target.value;
@@ -75,7 +79,7 @@ export default class Goal {
         typeSelect.append(`<option value="startEnd" ${this.type == 'startEnd' ? 'selected' : ''}>Start/end</option>`);
         typeSelect.append(`<option value="duration" ${this.type == 'duration' ? 'selected' : ''}>Duration</option>`);
         typeSelect.append(`<option value="reps" ${this.type == 'reps' ? 'selected' : ''}>Reps</option>`);
-        form.append($('<div class="form-group"></div>').append(typeSelect));
+        body.append($('<div class="form-group"></div>').append(typeSelect));
 
         typeSelect.on('change', (event) => {
             this.type = event.target.value;
@@ -84,14 +88,14 @@ export default class Goal {
 
         if (this.type == 'startEnd') {
             let startInput = $(`<input class="form-control" placeholder="Start" type="text" value="${this.start}">`);
-            form.append($('<div class="form-group"></div>').append(startInput));
+            body.append($('<div class="form-group"></div>').append(startInput));
 
             startInput.on('change', (event) => {
                 this.start = event.target.value;
             });
 
             let endInput = $(`<input class="form-control" placeholder="End" type="text" value="${this.end}">`);
-            form.append($('<div class="form-group"></div>').append(endInput));
+            body.append($('<div class="form-group"></div>').append(endInput));
 
             endInput.on('change', (event) => {
                 this.end = event.target.value;
@@ -100,7 +104,7 @@ export default class Goal {
 
         if (this.type == 'duration') {
             let durationInput = $(`<input class="form-control" placeholder="Duration" type="text" value="${this.duration}">`);
-            form.append($('<div class="form-group"></div>').append(durationInput));
+            body.append($('<div class="form-group"></div>').append(durationInput));
 
             durationInput.on('change', (event) => {
                 this.duration = event.target.value;
@@ -109,7 +113,7 @@ export default class Goal {
 
         if (this.type == 'reps') {
             let repsInput = $(`<input class="form-control" placeholder="Reps" type="text" value="${this.reps}">`);
-            form.append($('<div class="form-group"></div>').append(repsInput));
+            body.append($('<div class="form-group"></div>').append(repsInput));
 
             repsInput.on('change', (event) => {
                 this.reps = event.target.value;
@@ -117,14 +121,24 @@ export default class Goal {
         }
 
         let rewardInput = $(`<input class="form-control" placeholder="Reward" type="text" value="${this.reward}">`);
-        form.append($('<div class="form-group"></div>').append(rewardInput));
+        body.append($('<div class="form-group"></div>').append(rewardInput));
 
         rewardInput.on('change', (event) => {
             this.reward = event.target.value;
         });
 
-        let saveButton = $('<button class="btn btn-primary mr-3" data-dismiss="modal">Save</button>');
-        form.append(saveButton);
+        let footer = modal.find('.modal-footer').html('');
+
+        let deleteButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>');
+        footer.append(deleteButton);
+
+        deleteButton.on('click', (event) => {
+            this._row.remove();
+            $(document).trigger('goal.delete', this);
+        });
+
+        let saveButton = $('<button class="btn btn-primary" data-dismiss="modal">Save</button>');
+        footer.append(saveButton);
 
         saveButton.on('click', (event) => {
             if (!this.validate()) {
@@ -136,19 +150,6 @@ export default class Goal {
             $(document).trigger('goal.save', this);
         });
 
-        let deleteButton = $('<button class="btn btn-danger mr-3" data-dismiss="modal">Delete</button>');
-        form.append(deleteButton);
-
-        deleteButton.on('click', (event) => {
-            this._row.remove();
-            $(document).trigger('goal.delete', this);
-        });
-
-        let cancelButton = $('<button class="btn" data-dismiss="modal">Cancel</button>');
-        form.append(cancelButton);
-
-        let modal = $('#goal-modal');
-        modal.find('.modal-body').html(form);
         modal.modal();
     }
 

@@ -1,22 +1,25 @@
 import Goal from './Goal.js';
+import Tutorial from './Tutorial.js';
+import User from './User.js';
 
-function saveGoals() {
-    localStorage.setItem('goals', JSON.stringify(goals, (key, value) => {
+function saveUser() {
+    localStorage.setItem('user', JSON.stringify(user, (key, value) => {
         if (!key.startsWith('_')) {
             return value;
         }
     }));
 }
 
-let goals = [],
-    goalsJson = localStorage.getItem('goals'),
+let user = new User(),
+    userJson = localStorage.getItem('user'),
     addGoalButton = $('#add-goal-button');
 
-if (goalsJson) {
-    goals = JSON.parse(goalsJson).map(g => new Goal(g));
-    goals.forEach((goal) => {
-        goal.render();
-    });
+if (userJson) {
+    user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));
+    user.renderGoals();
+} else {
+    let tutorial = new Tutorial();
+    tutorial.render1();
 }
 
 addGoalButton.on('click', (event) => {
@@ -25,22 +28,19 @@ addGoalButton.on('click', (event) => {
 });
 
 $(document).on('goal.complete', (event, goal) => {
-    saveGoals();
+    saveUser();
 });
 
 $(document).on('goal.delete', (event, goal) => {
-    goals.splice(goals.indexOf(goal), 1);
-    saveGoals();
+    user.deleteGoal(goal);
+    saveUser();
 });
 
 $(document).on('goal.save', (event, goal) => {
-    if (goals.indexOf(goal) == -1) {
-        goals.push(goal);
-    }
-
-    saveGoals();
+    user.addGoal(goal);
+    saveUser();
 });
 
-window.goals = goals;
-window.saveGoals = saveGoals;
+window.user = user;
+window.saveUser = saveUser;
 
