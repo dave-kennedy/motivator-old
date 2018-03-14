@@ -1,5 +1,3 @@
-import Goal from './Goal.js';
-
 export default class User {
     constructor (params) {
         params = params || {};
@@ -20,6 +18,24 @@ export default class User {
         this.goals.forEach((goal) => {
             goal.render();
         });
+    }
+
+    renderRewards() {
+        let modal = $('#modal');
+
+        modal.find('.modal-title').html('Rewards earned');
+
+        let body = modal.find('.modal-body').html('');
+
+        this.goals.forEach((goal) => {
+            if (goal.complete) {
+                body.append(`<p>${goal.reward}</p>`);
+            }
+        });
+
+        modal.find('.modal-footer').html('');
+
+        modal.modal();
     }
 
     setGoals(goals) {

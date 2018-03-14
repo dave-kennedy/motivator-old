@@ -10,9 +10,13 @@
     </head>
     <body>
         <div class="container">
-            <h1>
-                <span class="icon icon-run"></span> Motivator
-            </h1>
+            <nav class="navbar navbar-light">
+                <a class="navbar-brand" href="#">
+                    <span class="icon icon-run"></span>
+                    <span class="large">Motivator</span>
+                </a>
+                <button class="btn btn-primary" id="rewards-button">Rewards</button>
+            </nav>
             <table class="table" id="goals-table">
                 <tr>
                     <th>Complete</th>
@@ -30,7 +34,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title"></h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button class="close" data-dismiss="modal" type="button">&times;</button>
                     </div>
                     <div class="modal-body"></div>
                     <div class="modal-footer"></div>

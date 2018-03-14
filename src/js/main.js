@@ -12,7 +12,8 @@ function saveUser() {
 
 let user = new User(),
     userJson = localStorage.getItem('user'),
-    addGoalButton = $('#add-goal-button');
+    addGoalButton = $('#add-goal-button'),
+    rewardsButton = $('#rewards-button');
 
 if (userJson) {
     user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));
@@ -25,6 +26,10 @@ if (userJson) {
 addGoalButton.on('click', (event) => {
     let goal = new Goal();
     goal.renderForm();
+});
+
+rewardsButton.on('click', (event) => {
+    user.renderRewards();
 });
 
 $(document).on('goal.complete', (event, goal) => {
