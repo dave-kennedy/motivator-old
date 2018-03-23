@@ -1,7 +1,7 @@
 export default class User {
     constructor (params) {
         params = params || {};
-        this.goals = params.goals;
+        this.goals = params.goals || [];
     }
 
     addGoal(goal) {
