@@ -61,6 +61,10 @@ $(document).on('goal.save', (event, goal) => {
     saveUser();
 });
 
+$(document).on('goal.rewardClaimed', (event, goal) => {
+    saveUser();
+});
+
 window.user = user;
 window.saveUser = saveUser;
 

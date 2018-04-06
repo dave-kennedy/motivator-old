@@ -10,6 +10,7 @@ export default class Goal {
         this.duration = params.duration || '';
         this.reps = params.reps || '';
         this.reward = params.reward || '';
+        this.rewardClaimed = params.rewardClaimed == undefined ? false : params.rewardClaimed;
         this._row;
     }
 
@@ -20,13 +21,13 @@ export default class Goal {
             this.renderForm();
         });
 
-        let completeSpan = $(`<span class="icon ${this.complete ? 'icon-ok' : 'icon-circle'}"></span>`);
-        row.append($('<td></td>').append(completeSpan));
+        let completeButton = $(`<span class="icon ${this.complete ? 'icon-ok' : 'icon-circle'}"></span>`);
+        row.append($('<td></td>').append(completeButton));
 
-        completeSpan.on('click', event => {
+        completeButton.on('click', event => {
             event.stopPropagation();
             this.complete = !this.complete;
-            completeSpan.toggleClass('icon-ok').toggleClass('icon-circle');
+            this.render();
             $(document).trigger('goal.complete', this);
         });
 
@@ -48,7 +49,30 @@ export default class Goal {
             row.append(`<td>Reps: ${this.reps}</td>`);
         }
 
-        row.append(`<td>${this.reward}</td>`);
+        if (this.complete && this.reward) {
+            let rewardText, claimButton;
+
+            if (this.rewardClaimed) {
+                rewardText = $(`<del>${this.reward}</del>`);
+                claimButton = $('<button class="btn btn-secondary ml-3">Claimed</button>');
+            } else {
+                rewardText = this.reward;
+                claimButton = $('<button class="btn btn-primary ml-3">Claim</button>');
+            }
+
+            row.append($('<td></td>').append(rewardText, claimButton));
+
+            claimButton.on('click', event => {
+                event.stopPropagation();
+                this.rewardClaimed = !this.rewardClaimed;
+                this.render();
+                $(document).trigger('goal.rewardClaimed', this);
+            });
+        } else if (this.reward) {
+            row.append(`<td>${this.reward}</td>`);
+        } else {
+            row.append('<td></td>');
+        }
 
         if (this._row) {
             this._row.replaceWith(row);
