@@ -3,6 +3,10 @@ body {
     margin-top: 1rem;
 }
 
+.font-large {
+    font-size: 2rem;
+}
+
 .icon {
     background-position: center;
     background-repeat: no-repeat;
@@ -34,10 +38,6 @@ body {
 
 .icon-run {
     background-image: url('../../img/icon-run-48.png');
-}
-
-.large {
-    font-size: 2rem;
 }
 
 .shadow {
