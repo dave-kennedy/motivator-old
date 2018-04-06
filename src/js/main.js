@@ -12,24 +12,39 @@ function saveUser() {
 
 let user = new User(),
     userJson = localStorage.getItem('user'),
-    addGoalButton = $('#add-goal-button'),
-    rewardsButton = $('#rewards-button');
+    backButton = $('#back-button'),
+    historyButton = $('#history-button'),
+    addGoalButton = $('#add-goal-button');
 
 if (userJson) {
     user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));
     user.renderGoals();
+    user.hideGoals(true);
+    backButton.hide();
 } else {
     let tutorial = new Tutorial();
     tutorial.render1();
 }
 
-addGoalButton.on('click', (event) => {
-    let goal = new Goal();
-    goal.renderForm();
+backButton.on('click', event => {
+    user.hideGoals(true);
+    user.showGoals(false);
+    backButton.hide();
+    historyButton.show();
+    addGoalButton.show();
 });
 
-rewardsButton.on('click', (event) => {
-    user.renderRewards();
+historyButton.on('click', event => {
+    user.hideGoals(false);
+    user.showGoals(true);
+    backButton.show();
+    historyButton.hide();
+    addGoalButton.hide();
+});
+
+addGoalButton.on('click', event => {
+    let goal = new Goal();
+    goal.renderForm();
 });
 
 $(document).on('goal.complete', (event, goal) => {

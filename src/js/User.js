@@ -15,27 +15,25 @@ export default class User {
     }
 
     renderGoals() {
-        this.goals.forEach((goal) => {
+        this.goals.forEach(goal => {
             goal.render();
         });
     }
 
-    renderRewards() {
-        let modal = $('#modal');
-
-        modal.find('.modal-title').html('Rewards earned');
-
-        let body = modal.find('.modal-body').html('');
-
-        this.goals.forEach((goal) => {
-            if (goal.complete) {
-                body.append(`<p>${goal.reward}</p>`);
+    hideGoals(complete) {
+        this.goals.forEach(goal => {
+            if (goal.complete == complete) {
+                goal.hide();
             }
         });
+    }
 
-        modal.find('.modal-footer').html('');
-
-        modal.modal();
+    showGoals(complete) {
+        this.goals.forEach(goal => {
+            if (goal.complete == complete) {
+                goal.show();
+            }
+        });
     }
 
     setGoals(goals) {

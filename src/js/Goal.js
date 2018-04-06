@@ -15,14 +15,14 @@ export default class Goal {
     render() {
         let row = $('<tr></tr>');
 
-        row.on('click', (event) => {
+        row.on('click', event => {
             this.renderForm();
         });
 
         let completeSpan = $(`<span class="icon ${this.complete ? 'icon-ok' : 'icon-circle'}"></span>`);
         row.append($('<td></td>').append(completeSpan));
 
-        completeSpan.on('click', (event) => {
+        completeSpan.on('click', event => {
             event.stopPropagation();
             this.complete = !this.complete;
             completeSpan.toggleClass('icon-ok').toggleClass('icon-circle');
@@ -69,7 +69,7 @@ export default class Goal {
         let nameInput = $(`<input class="form-control" placeholder="Name" type="text" value="${this.name}">`);
         body.append($('<div class="form-group"></div>').append(nameInput));
 
-        nameInput.on('change', (event) => {
+        nameInput.on('change', event => {
             this.name = event.target.value;
         });
 
@@ -81,7 +81,7 @@ export default class Goal {
         typeSelect.append(`<option value="reps" ${this.type == 'reps' ? 'selected' : ''}>Reps</option>`);
         body.append($('<div class="form-group"></div>').append(typeSelect));
 
-        typeSelect.on('change', (event) => {
+        typeSelect.on('change', event => {
             this.type = event.target.value;
             this.renderForm();
         });
@@ -90,14 +90,14 @@ export default class Goal {
             let startInput = $(`<input class="form-control" placeholder="Start" type="text" value="${this.start}">`);
             body.append($('<div class="form-group"></div>').append(startInput));
 
-            startInput.on('change', (event) => {
+            startInput.on('change', event => {
                 this.start = event.target.value;
             });
 
             let endInput = $(`<input class="form-control" placeholder="End" type="text" value="${this.end}">`);
             body.append($('<div class="form-group"></div>').append(endInput));
 
-            endInput.on('change', (event) => {
+            endInput.on('change', event => {
                 this.end = event.target.value;
             });
         }
@@ -106,7 +106,7 @@ export default class Goal {
             let durationInput = $(`<input class="form-control" placeholder="Duration" type="text" value="${this.duration}">`);
             body.append($('<div class="form-group"></div>').append(durationInput));
 
-            durationInput.on('change', (event) => {
+            durationInput.on('change', event => {
                 this.duration = event.target.value;
             });
         }
@@ -115,7 +115,7 @@ export default class Goal {
             let repsInput = $(`<input class="form-control" placeholder="Reps" type="text" value="${this.reps}">`);
             body.append($('<div class="form-group"></div>').append(repsInput));
 
-            repsInput.on('change', (event) => {
+            repsInput.on('change', event => {
                 this.reps = event.target.value;
             });
         }
@@ -123,7 +123,7 @@ export default class Goal {
         let rewardInput = $(`<input class="form-control" placeholder="Reward" type="text" value="${this.reward}">`);
         body.append($('<div class="form-group"></div>').append(rewardInput));
 
-        rewardInput.on('change', (event) => {
+        rewardInput.on('change', event => {
             this.reward = event.target.value;
         });
 
@@ -132,7 +132,7 @@ export default class Goal {
         let deleteButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>');
         footer.append(deleteButton);
 
-        deleteButton.on('click', (event) => {
+        deleteButton.on('click', event => {
             this._row.remove();
             $(document).trigger('goal.delete', this);
         });
@@ -140,7 +140,7 @@ export default class Goal {
         let saveButton = $('<button class="btn btn-primary" data-dismiss="modal">Save</button>');
         footer.append(saveButton);
 
-        saveButton.on('click', (event) => {
+        saveButton.on('click', event => {
             if (!this.validate()) {
                 event.stopPropagation();
                 throw new Error('Validation failed');
@@ -171,6 +171,18 @@ export default class Goal {
         }
 
         return true;
+    }
+
+    hide() {
+        if (this._row) {
+            this._row.hide();
+        }
+    }
+
+    show() {
+        if (this._row) {
+            this._row.show();
+        }
     }
 }
 

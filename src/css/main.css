@@ -24,8 +24,16 @@ body {
     background-image: url('../../img/icon-add-48.png');
 }
 
+.icon-back {
+    background-image: url('../../img/icon-back-48.png');
+}
+
 .icon-circle {
     background-image: url('../../img/icon-circle-48.png');
+}
+
+.icon-history {
+    background-image: url('../../img/icon-history-48.png');
 }
 
 .icon-ok {
