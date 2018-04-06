@@ -1,7 +1,8 @@
 export default class Goal {
     constructor (params) {
         params = params || {};
-        this.complete = params.complete || false;
+        this.complete = params.complete == undefined ? false : params.complete;
+        this.draft = params.draft == undefined ? true : params.draft;
         this.name = params.name || '';
         this.type = params.type || '';
         this.start = params.start || '';
@@ -62,7 +63,11 @@ export default class Goal {
     renderForm() {
         let modal = $('#modal');
 
-        modal.find('.modal-title').html('New goal');
+        if (this.draft) {
+            modal.find('.modal-title').html('New goal');
+        } else {
+            modal.find('.modal-title').html('Edit goal');
+        }
 
         let body = modal.find('.modal-body').html('');
 
@@ -146,6 +151,7 @@ export default class Goal {
                 throw new Error('Validation failed');
             }
 
+            this.draft = false;
             this.render();
             $(document).trigger('goal.save', this);
         });
