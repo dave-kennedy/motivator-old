@@ -3,14 +3,6 @@ body {
     margin-top: 1rem;
 }
 
-.b-3 {
-    bottom: 1rem !important;
-}
-
-.r-3 {
-    right: 1rem !important;
-}
-
 .icon {
     background-position: center;
     background-repeat: no-repeat;
