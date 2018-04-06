@@ -10,6 +10,22 @@ function saveUser() {
     }));
 }
 
+function hideHistory() {
+    user.hideGoals(true);
+    user.showGoals(false);
+    backButton.hide();
+    historyButton.show();
+    addGoalButton.show();
+}
+
+function showHistory() {
+    user.hideGoals(false);
+    user.showGoals(true);
+    backButton.show();
+    historyButton.hide();
+    addGoalButton.hide();
+}
+
 let user = new User(),
     userJson = localStorage.getItem('user'),
     backButton = $('#back-button'),
@@ -19,27 +35,19 @@ let user = new User(),
 if (userJson) {
     user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));
     user.renderGoals();
-    user.hideGoals(true);
-    backButton.hide();
 } else {
     let tutorial = new Tutorial();
     tutorial.render1();
 }
 
+hideHistory();
+
 backButton.on('click', event => {
-    user.hideGoals(true);
-    user.showGoals(false);
-    backButton.hide();
-    historyButton.show();
-    addGoalButton.show();
+    hideHistory();
 });
 
 historyButton.on('click', event => {
-    user.hideGoals(false);
-    user.showGoals(true);
-    backButton.show();
-    historyButton.hide();
-    addGoalButton.hide();
+    showHistory();
 });
 
 addGoalButton.on('click', event => {
