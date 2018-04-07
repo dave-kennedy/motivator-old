@@ -91,20 +91,20 @@ export default class Goal {
 
         let body = modal.find('.modal-body').html('');
 
-        let nameInput = $(`<input class="form-control" placeholder="Name" type="text" value="${this.name}">`);
-        body.append($('<div class="form-group"></div>').append(nameInput));
+        let nameInput = $(`<input class="form-control" type="text" value="${this.name}">`);
+        body.append($('<div class="form-group"></div>').append('<label>Name *</label>', nameInput));
 
         nameInput.on('change', event => {
             this.name = event.target.value;
         });
 
         let typeSelect = $('<select class="form-control"></select>');
-        typeSelect.append('<option value="" disabled selected>Type</option>');
+        typeSelect.append('<option value="" disabled selected></option>');
         typeSelect.append(`<option value="oneTime" ${this.type == 'oneTime' ? 'selected' : ''}>One time</option>`);
         typeSelect.append(`<option value="startEnd" ${this.type == 'startEnd' ? 'selected' : ''}>Start/end</option>`);
         typeSelect.append(`<option value="duration" ${this.type == 'duration' ? 'selected' : ''}>Duration</option>`);
         typeSelect.append(`<option value="reps" ${this.type == 'reps' ? 'selected' : ''}>Reps</option>`);
-        body.append($('<div class="form-group"></div>').append(typeSelect));
+        body.append($('<div class="form-group"></div>').append('<label>Type *</label>', typeSelect));
 
         typeSelect.on('change', event => {
             this.type = event.target.value;
@@ -112,15 +112,15 @@ export default class Goal {
         });
 
         if (this.type == 'startEnd') {
-            let startInput = $(`<input class="form-control" placeholder="Start" type="text" value="${this.start}">`);
-            body.append($('<div class="form-group"></div>').append(startInput));
+            let startInput = $(`<input class="form-control" type="text" value="${this.start}">`);
+            body.append($('<div class="form-group"></div>').append('<label>Start *</label>', startInput));
 
             startInput.on('change', event => {
                 this.start = event.target.value;
             });
 
-            let endInput = $(`<input class="form-control" placeholder="End" type="text" value="${this.end}">`);
-            body.append($('<div class="form-group"></div>').append(endInput));
+            let endInput = $(`<input class="form-control" type="text" value="${this.end}">`);
+            body.append($('<div class="form-group"></div>').append('<label>End *</label>', endInput));
 
             endInput.on('change', event => {
                 this.end = event.target.value;
@@ -128,8 +128,8 @@ export default class Goal {
         }
 
         if (this.type == 'duration') {
-            let durationInput = $(`<input class="form-control" placeholder="Duration" type="text" value="${this.duration}">`);
-            body.append($('<div class="form-group"></div>').append(durationInput));
+            let durationInput = $(`<input class="form-control" type="text" value="${this.duration}">`);
+            body.append($('<div class="form-group"></div>').append('<label>Duration *</label>', durationInput));
 
             durationInput.on('change', event => {
                 this.duration = event.target.value;
@@ -137,16 +137,16 @@ export default class Goal {
         }
 
         if (this.type == 'reps') {
-            let repsInput = $(`<input class="form-control" placeholder="Reps" type="text" value="${this.reps}">`);
-            body.append($('<div class="form-group"></div>').append(repsInput));
+            let repsInput = $(`<input class="form-control" type="text" value="${this.reps}">`);
+            body.append($('<div class="form-group"></div>').append('<label>Reps *</label>', repsInput));
 
             repsInput.on('change', event => {
                 this.reps = event.target.value;
             });
         }
 
-        let rewardInput = $(`<input class="form-control" placeholder="Reward" type="text" value="${this.reward}">`);
-        body.append($('<div class="form-group"></div>').append(rewardInput));
+        let rewardInput = $(`<input class="form-control" type="text" value="${this.reward}">`);
+        body.append($('<div class="form-group"></div>').append('<label>Reward</label>', rewardInput));
 
         rewardInput.on('change', event => {
             this.reward = event.target.value;
@@ -168,7 +168,8 @@ export default class Goal {
         saveButton.on('click', event => {
             if (!this.validate()) {
                 event.stopPropagation();
-                throw new Error('Validation failed');
+                body.prepend('<div class="alert alert-danger">Fields marked with an asterisk (*) are required.</div>');
+                return;
             }
 
             this.draft = false;
