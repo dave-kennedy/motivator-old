@@ -47,19 +47,18 @@ export default class Goal {
         }
 
         if (this.reward) {
-            let rewardDiv = $(`<div>Reward: ${this.rewardClaimed ? '<del>' + this.reward + '</del>' : this.reward}</div>`);
-            body.append(rewardDiv);
+            body.append(`<div>Reward: ${this.rewardClaimed ? '<del>' + this.reward + '</del>' : this.reward}</div>`);
 
             if (this.complete) {
                 let claimButton;
 
                 if (this.rewardClaimed) {
-                    claimButton = $('<span class="badge badge-secondary ml-1">Claimed</span>');
+                    claimButton = $('<button class="btn btn-secondary mt-3">Claimed</button>');
                 } else {
-                    claimButton = $('<span class="badge badge-success ml-1">Claim</span>');
+                    claimButton = $('<button class="btn btn-success mt-3">Claim</button>');
                 }
 
-                rewardDiv.append(claimButton);
+                body.append($('<div></div>').append(claimButton));
 
                 claimButton.on('click', event => {
                     event.stopPropagation();
