@@ -11,18 +11,18 @@ export default class Goal {
         this.reps = params.reps || '';
         this.reward = params.reward || '';
         this.rewardClaimed = params.rewardClaimed == undefined ? false : params.rewardClaimed;
-        this._row;
+        this._elem;
     }
 
     render() {
-        let row = $('<tr></tr>');
+        let elem = $('<div class="media border-bottom mb-3 pb-3"></div>');
 
-        row.on('click', event => {
+        elem.on('click', event => {
             this.renderForm();
         });
 
-        let completeButton = $(`<span class="icon ${this.complete ? 'icon-ok' : 'icon-circle'}"></span>`);
-        row.append($('<td></td>').append(completeButton));
+        let completeButton = $(`<span class="icon ${this.complete ? 'icon-ok' : 'icon-circle'} mr-3"></span>`);
+        elem.append($('<div></div>').append(completeButton));
 
         completeButton.on('click', event => {
             event.stopPropagation();
@@ -31,56 +31,52 @@ export default class Goal {
             $(document).trigger('goal.complete', this);
         });
 
-        row.append(`<td>${this.name}</td>`);
+        let body = $('<div class="media-body"></div>');
+        elem.append(body);
+
+        body.append(`<div class="h5">${this.name}</div>`);
 
         if (this.type == 'oneTime') {
-            row.append('<td></td>');
+            body.append('<div>One time</div>');
+        } else if (this.type == 'startEnd') {
+            body.append(`<div>Start: ${this.start}<br>End: ${this.end}</div>`);
+        } else if (this.type == 'duration') {
+            body.append(`<div>Duration: ${this.duration}</div>`);
+        } else if (this.type == 'reps') {
+            body.append(`<div>Reps: ${this.reps}</div>`);
         }
 
-        if (this.type == 'startEnd') {
-            row.append(`<td>Start: ${this.start}<br>End: ${this.end}</td>`);
-        }
+        if (this.reward) {
+            let rewardDiv = $(`<div>Reward: ${this.rewardClaimed ? '<del>' + this.reward + '</del>' : this.reward}</div>`);
+            body.append(rewardDiv);
 
-        if (this.type == 'duration') {
-            row.append(`<td>Duration: ${this.duration}</td>`);
-        }
+            if (this.complete) {
+                let claimButton;
 
-        if (this.type == 'reps') {
-            row.append(`<td>Reps: ${this.reps}</td>`);
-        }
+                if (this.rewardClaimed) {
+                    claimButton = $('<span class="badge badge-secondary ml-1">Claimed</span>');
+                } else {
+                    claimButton = $('<span class="badge badge-success ml-1">Claim</span>');
+                }
 
-        if (this.complete && this.reward) {
-            let rewardText, claimButton;
+                rewardDiv.append(claimButton);
 
-            if (this.rewardClaimed) {
-                rewardText = $(`<del>${this.reward}</del>`);
-                claimButton = $('<button class="btn btn-secondary ml-3">Claimed</button>');
-            } else {
-                rewardText = this.reward;
-                claimButton = $('<button class="btn btn-primary ml-3">Claim</button>');
+                claimButton.on('click', event => {
+                    event.stopPropagation();
+                    this.rewardClaimed = !this.rewardClaimed;
+                    this.render();
+                    $(document).trigger('goal.rewardClaimed', this);
+                });
             }
-
-            row.append($('<td></td>').append(rewardText, claimButton));
-
-            claimButton.on('click', event => {
-                event.stopPropagation();
-                this.rewardClaimed = !this.rewardClaimed;
-                this.render();
-                $(document).trigger('goal.rewardClaimed', this);
-            });
-        } else if (this.reward) {
-            row.append(`<td>${this.reward}</td>`);
-        } else {
-            row.append('<td></td>');
         }
 
-        if (this._row) {
-            this._row.replaceWith(row);
-            this._row = row;
+        if (this._elem) {
+            this._elem.replaceWith(elem);
+            this._elem = elem;
         } else {
-            let table = $('#goals-table');
-            table.append(row);
-            this._row = row;
+            let goalsList = $('#goals-list');
+            goalsList.append(elem);
+            this._elem = elem;
         }
     }
 
@@ -162,7 +158,7 @@ export default class Goal {
         footer.append(deleteButton);
 
         deleteButton.on('click', event => {
-            this._row.remove();
+            this._elem.remove();
             $(document).trigger('goal.delete', this);
         });
 
@@ -204,14 +200,14 @@ export default class Goal {
     }
 
     hide() {
-        if (this._row) {
-            this._row.hide();
+        if (this._elem) {
+            this._elem.hide();
         }
     }
 
     show() {
-        if (this._row) {
-            this._row.show();
+        if (this._elem) {
+            this._elem.show();
         }
     }
 }
