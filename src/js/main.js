@@ -14,23 +14,23 @@ function hideHistory() {
     user.hideGoals(true);
     user.showGoals(false);
     backButton.hide();
-    historyButton.show();
-    addGoalButton.show();
+    menuButton.show();
 }
 
 function showHistory() {
     user.hideGoals(false);
     user.showGoals(true);
     backButton.show();
-    historyButton.hide();
-    addGoalButton.hide();
+    menuButton.hide();
 }
 
 let user = new User(),
     userJson = localStorage.getItem('user'),
+    menu = $('#menu'),
+    menuButton = $('#menu-button'),
     backButton = $('#back-button'),
-    historyButton = $('#history-button'),
-    addGoalButton = $('#add-goal-button');
+    addGoalButton = $('#add-goal-button'),
+    historyButton = $('#history-button');
 
 if (userJson) {
     user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));
@@ -42,17 +42,23 @@ if (userJson) {
 
 hideHistory();
 
-backButton.on('click', event => {
-    hideHistory();
+menuButton.on('click', event => {
+    menu.collapse('toggle');
 });
 
-historyButton.on('click', event => {
-    showHistory();
+backButton.on('click', event => {
+    hideHistory();
 });
 
 addGoalButton.on('click', event => {
     let goal = new Goal();
     goal.renderForm();
+    menu.collapse('hide');
+});
+
+historyButton.on('click', event => {
+    showHistory();
+    menu.collapse('hide');
 });
 
 $(document).on('goal.complete', (event, goal) => {

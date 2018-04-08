@@ -11,14 +11,20 @@
     <body>
         <div class="container">
             <nav class="navbar navbar-light px-0">
-                <a class="navbar-brand" href="#">
-                    <span class="icon icon-run"></span>
-                    <span class="font-large">Motivator</span>
-                </a>
-                <div>
-                    <span class="bg-white icon icon-back rounded-circle shadow" id="back-button"></span>
-                    <span class="bg-white icon icon-history rounded-circle shadow" id="history-button"></span>
-                    <span class="bg-white icon icon-add rounded-circle shadow" id="add-goal-button"></span>
+                <div class="navbar-brand">
+                    <span class="icon icon-run"></span> Motivator
+                </div>
+                <span class="icon icon-sm icon-menu-sm" id="menu-button"></span>
+                <span class="icon icon-sm icon-left-sm" id="back-button"></span>
+                <div class="collapse navbar-collapse" id="menu">
+                    <div class="navbar-nav text-right">
+                        <a class="nav-link" id="add-goal-button">
+                            Add goal <span class="icon icon-add"></span>
+                        </a>
+                        <a class="nav-link" id="history-button">
+                            History <span class="icon icon-history"></span>
+                        </a>
+                    </div>
                 </div>
             </nav>
             <div id="goals-list"></div>

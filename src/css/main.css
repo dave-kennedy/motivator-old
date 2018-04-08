@@ -1,27 +1,19 @@
-body {
-    margin-bottom: 4rem;
-    margin-top: 1rem;
-}
-
-.font-large {
-    font-size: 2rem;
-}
-
 .icon {
     background-position: center;
     background-repeat: no-repeat;
     display: inline-block;
     height: 48px;
-    vertical-align: top;
+    vertical-align: middle;
     width: 48px;
+}
+
+.icon-sm {
+    height: 24px;
+    width: 24px;
 }
 
 .icon-add {
     background-image: url('../../img/icon-add-48.png');
-}
-
-.icon-back {
-    background-image: url('../../img/icon-back-48.png');
 }
 
 .icon-circle {
@@ -32,15 +24,27 @@ body {
     background-image: url('../../img/icon-history-48.png');
 }
 
+.icon-left {
+    background-image: url('../../img/icon-left-48.png');
+}
+
+.icon-left-sm {
+    background-image: url('../../img/icon-left-24.png');
+}
+
 .icon-ok {
     background-image: url('../../img/icon-ok-48.png');
 }
 
-.icon-run {
-    background-image: url('../../img/icon-run-48.png');
+.icon-menu {
+    background-image: url('../../img/icon-menu-48.png');
 }
 
-.shadow {
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+.icon-menu-sm {
+    background-image: url('../../img/icon-menu-24.png');
+}
+
+.icon-run {
+    background-image: url('../../img/icon-run-48.png');
 }
 
