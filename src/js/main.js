@@ -43,7 +43,7 @@ if (userJson) {
 hideHistory();
 
 menuButton.on('click', event => {
-    menu.collapse('toggle');
+    menu.flyout('toggle');
 });
 
 backButton.on('click', event => {
@@ -53,12 +53,12 @@ backButton.on('click', event => {
 addGoalButton.on('click', event => {
     let goal = new Goal();
     goal.renderForm();
-    menu.collapse('hide');
+    menu.flyout('hide');
 });
 
 historyButton.on('click', event => {
     showHistory();
-    menu.collapse('hide');
+    menu.flyout('hide');
 });
 
 $(document).on('goal.complete', (event, goal) => {
