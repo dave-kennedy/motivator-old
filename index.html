@@ -15,20 +15,23 @@
                 <div class="navbar-brand">
                     <span class="icon icon-run"></span> Motivator
                 </div>
-                <span class="icon icon-sm icon-menu-sm" id="menu-button"></span>
-                <span class="icon icon-sm icon-left-sm" id="back-button"></span>
+                <span class="icon icon-sm icon-menu-sm" data-action="showMenu" id="menu-button"></span>
+                <span class="icon icon-sm icon-left-sm" data-action="showHome" id="back-button"></span>
                 <div class="flyout navbar-flyout right" id="menu">
                     <div class="navbar-nav text-right">
-                        <a class="nav-link" id="add-goal-button">
+                        <a class="nav-link" data-action="addGoal">
                             Add goal <span class="icon icon-add"></span>
                         </a>
-                        <a class="nav-link" id="history-button">
+                        <a class="nav-link" data-action="showHistory">
                             History <span class="icon icon-history"></span>
                         </a>
                     </div>
                 </div>
             </nav>
             <div id="goals-list"></div>
+        </div>
+        <div class="position-fixed b-3 r-3">
+            <span class="icon icon-add" data-action="addGoal"></span>
         </div>
         <div class="modal fade" id="modal">
             <div class="modal-dialog">

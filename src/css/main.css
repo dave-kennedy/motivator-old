@@ -48,3 +48,11 @@
     background-image: url('../../img/icon-run-48.png');
 }
 
+.b-3 {
+    bottom: 1rem;
+}
+
+.r-3 {
+    right: 1rem;
+}
+

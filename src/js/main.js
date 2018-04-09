@@ -10,11 +10,9 @@ function saveUser() {
     }));
 }
 
-function hideHistory() {
-    user.hideGoals(true);
-    user.showGoals(false);
-    backButton.hide();
-    menuButton.show();
+function addGoal() {
+    let goal = new Goal();
+    goal.renderForm();
 }
 
 function showHistory() {
@@ -24,13 +22,26 @@ function showHistory() {
     menuButton.hide();
 }
 
+function showHome() {
+    user.hideGoals(true);
+    user.showGoals(false);
+    backButton.hide();
+    menuButton.show();
+}
+
+function showMenu() {
+    menu.flyout('show');
+}
+
+function hideMenu() {
+    menu.flyout('hide');
+}
+
 let user = new User(),
     userJson = localStorage.getItem('user'),
     menu = $('#menu'),
     menuButton = $('#menu-button'),
-    backButton = $('#back-button'),
-    addGoalButton = $('#add-goal-button'),
-    historyButton = $('#history-button');
+    backButton = $('#back-button');
 
 if (userJson) {
     user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));
@@ -40,25 +51,22 @@ if (userJson) {
     tutorial.render1();
 }
 
-hideHistory();
+showHome();
 
-menuButton.on('click', event => {
-    menu.flyout('toggle');
-});
+$(document).on('click', event => {
+    let action = $(event.target).data('action') || $(event.target).parent().data('action');
 
-backButton.on('click', event => {
-    hideHistory();
-});
-
-addGoalButton.on('click', event => {
-    let goal = new Goal();
-    goal.renderForm();
-    menu.flyout('hide');
-});
-
-historyButton.on('click', event => {
-    showHistory();
-    menu.flyout('hide');
+    if (action == 'addGoal') {
+        addGoal();
+        hideMenu();
+    } else if (action == 'showHistory') {
+        showHistory();
+        hideMenu();
+    } else if (action == 'showHome') {
+        showHome();
+    } else if (action == 'showMenu') {
+        showMenu();
+    }
 });
 
 $(document).on('goal.complete', (event, goal) => {
