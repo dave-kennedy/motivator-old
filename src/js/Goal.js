@@ -22,6 +22,7 @@ export default class Goal {
         completeButton.on('click', event => {
             event.stopPropagation();
             this.complete = !this.complete;
+            this.rewardClaimed = false;
             this.render();
             $(document).trigger('goal.complete', this);
         });
