@@ -4,11 +4,6 @@ export default class Goal {
         this.complete = params.complete == undefined ? false : params.complete;
         this.draft = params.draft == undefined ? true : params.draft;
         this.name = params.name || '';
-        this.type = params.type || '';
-        this.start = params.start || '';
-        this.end = params.end || '';
-        this.duration = params.duration || '';
-        this.reps = params.reps || '';
         this.reward = params.reward || '';
         this.rewardClaimed = params.rewardClaimed == undefined ? false : params.rewardClaimed;
         this._elem;
@@ -35,16 +30,6 @@ export default class Goal {
         elem.append(body);
 
         body.append(`<div class="h5">${this.name}</div>`);
-
-        if (this.type == 'oneTime') {
-            body.append('<div>One time</div>');
-        } else if (this.type == 'startEnd') {
-            body.append(`<div>Start: ${this.start}<br>End: ${this.end}</div>`);
-        } else if (this.type == 'duration') {
-            body.append(`<div>Duration: ${this.duration}</div>`);
-        } else if (this.type == 'reps') {
-            body.append(`<div>Reps: ${this.reps}</div>`);
-        }
 
         if (this.reward) {
             body.append(`<div>Reward: ${this.rewardClaimed ? '<del>' + this.reward + '</del>' : this.reward}</div>`);
@@ -97,53 +82,6 @@ export default class Goal {
             this.name = event.target.value;
         });
 
-        let typeSelect = $('<select class="form-control"></select>');
-        typeSelect.append('<option value="" disabled selected></option>');
-        typeSelect.append(`<option value="oneTime" ${this.type == 'oneTime' ? 'selected' : ''}>One time</option>`);
-        typeSelect.append(`<option value="startEnd" ${this.type == 'startEnd' ? 'selected' : ''}>Start/end</option>`);
-        typeSelect.append(`<option value="duration" ${this.type == 'duration' ? 'selected' : ''}>Duration</option>`);
-        typeSelect.append(`<option value="reps" ${this.type == 'reps' ? 'selected' : ''}>Reps</option>`);
-        body.append($('<div class="form-group"></div>').append('<label>Type *</label>', typeSelect));
-
-        typeSelect.on('change', event => {
-            this.type = event.target.value;
-            this.renderForm();
-        });
-
-        if (this.type == 'startEnd') {
-            let startInput = $(`<input class="form-control" type="text" value="${this.start}">`);
-            body.append($('<div class="form-group"></div>').append('<label>Start *</label>', startInput));
-
-            startInput.on('change', event => {
-                this.start = event.target.value;
-            });
-
-            let endInput = $(`<input class="form-control" type="text" value="${this.end}">`);
-            body.append($('<div class="form-group"></div>').append('<label>End *</label>', endInput));
-
-            endInput.on('change', event => {
-                this.end = event.target.value;
-            });
-        }
-
-        if (this.type == 'duration') {
-            let durationInput = $(`<input class="form-control" type="text" value="${this.duration}">`);
-            body.append($('<div class="form-group"></div>').append('<label>Duration *</label>', durationInput));
-
-            durationInput.on('change', event => {
-                this.duration = event.target.value;
-            });
-        }
-
-        if (this.type == 'reps') {
-            let repsInput = $(`<input class="form-control" type="text" value="${this.reps}">`);
-            body.append($('<div class="form-group"></div>').append('<label>Reps *</label>', repsInput));
-
-            repsInput.on('change', event => {
-                this.reps = event.target.value;
-            });
-        }
-
         let rewardInput = $(`<input class="form-control" type="text" value="${this.reward}">`);
         body.append($('<div class="form-group"></div>').append('<label>Reward</label>', rewardInput));
 
@@ -180,23 +118,7 @@ export default class Goal {
     }
 
     validate() {
-        if (!this.name || !this.type) {
-            return false;
-        }
-
-        if (this.type == 'startEnd' && (!this.start || !this.end)) {
-            return false;
-        }
-
-        if (this.type == 'duration' && !this.duration) {
-            return false;
-        }
-
-        if (this.type == 'reps' && !this.reps) {
-            return false;
-        }
-
-        return true;
+        return this.name;
     }
 
     hide() {
