@@ -22,6 +22,10 @@ function showHistory() {
     homeNav.hide();
 }
 
+function showTutorial() {
+    new Tutorial().render1();
+}
+
 function showHome() {
     user.hideGoals(true);
     user.showGoals(false);
@@ -47,8 +51,7 @@ if (userJson) {
     user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));
     user.renderGoals();
 } else {
-    let tutorial = new Tutorial();
-    tutorial.render1();
+    showTutorial();
 }
 
 showHome();
@@ -61,6 +64,9 @@ $(document).on('click', event => {
         hideMenu();
     } else if (action == 'showHistory') {
         showHistory();
+        hideMenu();
+    } else if (action == 'showTutorial') {
+        showTutorial();
         hideMenu();
     } else if (action == 'showHome') {
         showHome();

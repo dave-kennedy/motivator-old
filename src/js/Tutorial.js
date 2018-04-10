@@ -43,7 +43,7 @@ export default class Tutorial {
     render3() {
         let modal = $('#modal');
         modal.find('.modal-title').html('Step 3: Reward yourself');
-        modal.find('.modal-body').html('<p>To see the rewards you\'ve earned, open the menu in the top right corner, ' +
+        modal.find('.modal-body').html('<p>To see the rewards you\'ve earned, open the menu in the top left corner, ' +
                 'then press the history icon.</p>');
 
         let footer = modal.find('.modal-footer').html('');

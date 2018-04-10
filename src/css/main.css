@@ -15,6 +15,10 @@
     background-image: url('../../img/icon-circle-48.png');
 }
 
+.icon-help {
+    background-image: url('../../img/icon-help-48.png');
+}
+
 .icon-history {
     background-image: url('../../img/icon-history-48.png');
 }
@@ -38,6 +42,10 @@
 
 .icon-back-sm {
     background-image: url('../../img/icon-back-24.png');
+}
+
+.icon-help-sm {
+    background-image: url('../../img/icon-help-24.png');
 }
 
 .icon-history-sm {
