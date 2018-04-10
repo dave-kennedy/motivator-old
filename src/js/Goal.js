@@ -6,6 +6,7 @@ export default class Goal {
         this.name = params.name || '';
         this.reward = params.reward || '';
         this.rewardClaimed = params.rewardClaimed == undefined ? false : params.rewardClaimed;
+        this.repeat = params.repeat == undefined ? false : params.repeat;
         this._elem;
     }
 
@@ -25,6 +26,12 @@ export default class Goal {
             this.rewardClaimed = false;
             this.render();
             $(document).trigger('goal.complete', this);
+
+            if (this.complete && this.repeat) {
+                let goal = new Goal({draft: false, name: this.name, reward: this.reward, repeat: true});
+                goal.render();
+                $(document).trigger('goal.save', goal);
+            }
         });
 
         let body = $('<div class="media-body"></div>');
@@ -88,6 +95,13 @@ export default class Goal {
 
         rewardInput.on('change', event => {
             this.reward = event.target.value;
+        });
+
+        let repeatInput = $(`<input class="mr-1" type="checkbox" ${this.repeat ? 'checked' : ''}>`);
+        body.append($('<div class="form-group"></div>').append(repeatInput, '<label>Repeat</label>'));
+
+        repeatInput.on('change', event => {
+            this.repeat = event.target.checked;
         });
 
         let footer = modal.find('.modal-footer').html('');

@@ -11,8 +11,7 @@ function saveUser() {
 }
 
 function addGoal() {
-    let goal = new Goal();
-    goal.renderForm();
+    new Goal().renderForm();
 }
 
 function showHistory() {
