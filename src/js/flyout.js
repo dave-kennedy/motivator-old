@@ -29,10 +29,8 @@ function toggle() {
 }
 
 $(document).on('click', '[data-toggle="flyout"]', event => {
-    let target = $(event.target).data('target'),
-        targetElem = $(target);
-
-    targetElem.toggleClass('show');
+    let target = $(event.target).data('target');
+    $(target).flyout('toggle');
 });
 
 $.fn.flyout = function (config) {

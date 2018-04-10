@@ -10,24 +10,27 @@
         <link href="src/css/main.css" rel="stylesheet">
     </head>
     <body>
+        <nav class="navbar navbar-dark bg-dark mb-3" id="home-nav">
+            <div class="navbar-brand">
+                <span class="icon icon-menu-sm" data-action="showMenu"></span> Goals
+            </div>
+        </nav>
+        <nav class="navbar navbar-dark bg-dark mb-3" id="history-nav">
+            <div class="navbar-brand">
+                <span class="icon icon-back-sm" data-action="showHome"></span> History
+            </div>
+        </nav>
+        <div class="flyout navbar-flyout" id="menu">
+            <div class="navbar-nav">
+                <a class="nav-link" data-action="addGoal">
+                    <span class="icon icon-sm icon-add-sm"></span> Add goal
+                </a>
+                <a class="nav-link" data-action="showHistory">
+                    <span class="icon icon-sm icon-history-sm"></span> History
+                </a>
+            </div>
+        </div>
         <div class="container">
-            <nav class="navbar navbar-light px-0">
-                <div class="navbar-brand">
-                    <span class="icon icon-run"></span> Motivator
-                </div>
-                <span class="icon icon-sm icon-menu-sm" data-action="showMenu" id="menu-button"></span>
-                <span class="icon icon-sm icon-left-sm" data-action="showHome" id="back-button"></span>
-                <div class="flyout navbar-flyout right" id="menu">
-                    <div class="navbar-nav text-right">
-                        <a class="nav-link" data-action="addGoal">
-                            Add goal <span class="icon icon-add"></span>
-                        </a>
-                        <a class="nav-link" data-action="showHistory">
-                            History <span class="icon icon-history"></span>
-                        </a>
-                    </div>
-                </div>
-            </nav>
             <div id="goals-list"></div>
         </div>
         <div class="position-fixed b-3 r-3">

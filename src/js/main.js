@@ -18,15 +18,15 @@ function addGoal() {
 function showHistory() {
     user.hideGoals(false);
     user.showGoals(true);
-    backButton.show();
-    menuButton.hide();
+    historyNav.show();
+    homeNav.hide();
 }
 
 function showHome() {
     user.hideGoals(true);
     user.showGoals(false);
-    backButton.hide();
-    menuButton.show();
+    historyNav.hide();
+    homeNav.show();
 }
 
 function showMenu() {
@@ -40,8 +40,8 @@ function hideMenu() {
 let user = new User(),
     userJson = localStorage.getItem('user'),
     menu = $('#menu'),
-    menuButton = $('#menu-button'),
-    backButton = $('#back-button');
+    homeNav = $('#home-nav'),
+    historyNav = $('#history-nav');
 
 if (userJson) {
     user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));

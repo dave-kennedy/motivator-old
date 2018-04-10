@@ -7,11 +7,6 @@
     width: 48px;
 }
 
-.icon-sm {
-    height: 24px;
-    width: 24px;
-}
-
 .icon-add {
     background-image: url('../../img/icon-add-48.png');
 }
@@ -24,28 +19,33 @@
     background-image: url('../../img/icon-history-48.png');
 }
 
-.icon-left {
-    background-image: url('../../img/icon-left-48.png');
-}
-
-.icon-left-sm {
-    background-image: url('../../img/icon-left-24.png');
-}
-
 .icon-ok {
     background-image: url('../../img/icon-ok-48.png');
 }
 
-.icon-menu {
-    background-image: url('../../img/icon-menu-48.png');
+.icon-run {
+    background-image: url('../../img/icon-run-48.png');
+}
+
+.icon-sm {
+    height: 24px;
+    width: 24px;
+}
+
+.icon-add-sm {
+    background-image: url('../../img/icon-add-24.png');
+}
+
+.icon-back-sm {
+    background-image: url('../../img/icon-back-24.png');
+}
+
+.icon-history-sm {
+    background-image: url('../../img/icon-history-24.png');
 }
 
 .icon-menu-sm {
     background-image: url('../../img/icon-menu-24.png');
-}
-
-.icon-run {
-    background-image: url('../../img/icon-run-48.png');
 }
 
 .b-3 {
