@@ -1,6 +1,5 @@
 export default class User {
-    constructor (params) {
-        params = params || {};
+    constructor (params = {}) {
         this.goals = params.goals || [];
     }
 
@@ -14,9 +13,7 @@ export default class User {
         this.goals.splice(this.goals.indexOf(goal), 1);
     }
 
-    renderGoals(complete, sortBy) {
-        sortBy = sortBy || 'createDate';
-
+    renderGoals(complete, sortBy = 'createDate') {
         this.goals.sort((goal1, goal2) => {
             return goal1[sortBy] > goal2[sortBy];
         }).forEach(goal => {
