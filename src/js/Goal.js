@@ -64,12 +64,11 @@ export default class Goal {
 
         if (this._elem) {
             this._elem.replaceWith(elem);
-            this._elem = elem;
         } else {
-            let goalsList = $('#goals-list');
-            goalsList.append(elem);
-            this._elem = elem;
+            $('#goals-list').append(elem);
         }
+
+        this._elem = elem;
     }
 
     renderForm() {
@@ -81,7 +80,7 @@ export default class Goal {
             modal.find('.modal-title').html('Edit goal');
         }
 
-        let body = modal.find('.modal-body').html('');
+        let body = modal.find('.modal-body').empty();
 
         let nameInput = $(`<input class="form-control" type="text" value="${this.name}">`);
         body.append($('<div class="form-group"></div>').append('<label>Name *</label>', nameInput));
@@ -104,13 +103,13 @@ export default class Goal {
             this.repeat = event.target.checked;
         });
 
-        let footer = modal.find('.modal-footer').html('');
+        let footer = modal.find('.modal-footer').empty();
 
         let deleteButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>');
         footer.append(deleteButton);
 
         deleteButton.on('click', event => {
-            this._elem.remove();
+            this.remove();
             $(document).trigger('goal.delete', this);
         });
 

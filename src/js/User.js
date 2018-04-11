@@ -14,14 +14,30 @@ export default class User {
     }
 
     renderGoals(complete, sortBy = 'createDate') {
+        let goalsList = $('#goals-list').empty(),
+            prevDate;
+
+        if (sortBy != 'createDate' && sortBy != 'completeDate' && sortBy != 'rewardClaimDate') {
+            sortBy = 'createDate';
+        }
+
         this.goals.sort((goal1, goal2) => {
             return goal1[sortBy] > goal2[sortBy];
         }).forEach(goal => {
-            if (goal.isCompleted() == complete) {
-                goal.render();
-            } else {
-                goal.remove();
+            goal.remove();
+
+            if (!goal[sortBy] || goal.isCompleted() != complete) {
+                return;
             }
+
+            let date = goal[sortBy].toLocaleDateString();
+
+            if (prevDate != date) {
+                prevDate = date;
+                goalsList.append(`<div class="badge badge-secondary mb-3">${date}</div`);
+            }
+
+            goal.render();
         });
     }
 
