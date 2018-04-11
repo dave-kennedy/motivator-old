@@ -133,20 +133,15 @@ export default class Goal {
         modal.modal();
     }
 
+    remove() {
+        if (this._elem) {
+            this._elem.remove();
+            this._elem = null;
+        }
+    }
+
     validate() {
         return this.name.trim() != '';
-    }
-
-    hide() {
-        if (this._elem) {
-            this._elem.hide();
-        }
-    }
-
-    show() {
-        if (this._elem) {
-            this._elem.show();
-        }
     }
 
     isCompleted() {

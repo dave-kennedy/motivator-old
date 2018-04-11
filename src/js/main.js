@@ -15,8 +15,7 @@ function addGoal() {
 }
 
 function showHistory() {
-    user.hideGoals(false);
-    user.showGoals(true);
+    user.renderGoals(true, 'completeDate');
     historyNav.show();
     homeNav.hide();
 }
@@ -26,8 +25,7 @@ function showTutorial() {
 }
 
 function showHome() {
-    user.hideGoals(true);
-    user.showGoals(false);
+    user.renderGoals(false, 'createDate');
     historyNav.hide();
     homeNav.show();
 }
@@ -48,7 +46,6 @@ let user = new User(),
 
 if (userJson) {
     user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));
-    user.renderGoals();
 } else {
     showTutorial();
 }

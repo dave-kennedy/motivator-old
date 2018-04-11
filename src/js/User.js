@@ -14,24 +14,16 @@ export default class User {
         this.goals.splice(this.goals.indexOf(goal), 1);
     }
 
-    renderGoals() {
-        this.goals.forEach(goal => {
-            goal.render();
-        });
-    }
+    renderGoals(complete, sortBy) {
+        sortBy = sortBy || 'createDate';
 
-    hideGoals(complete) {
-        this.goals.forEach(goal => {
+        this.goals.sort((goal1, goal2) => {
+            return goal1[sortBy] > goal2[sortBy];
+        }).forEach(goal => {
             if (goal.isCompleted() == complete) {
-                goal.hide();
-            }
-        });
-    }
-
-    showGoals(complete) {
-        this.goals.forEach(goal => {
-            if (goal.isCompleted() == complete) {
-                goal.show();
+                goal.render();
+            } else {
+                goal.remove();
             }
         });
     }
