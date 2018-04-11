@@ -1,13 +1,14 @@
 export default class Goal {
     constructor (params) {
         params = params || {};
-        this.complete = params.complete == undefined ? false : params.complete;
+        this.createDate = params.createDate ? new Date(params.createDate) : new Date();
+        this.completeDate = params.completeDate ? new Date(params.completeDate) : null;
         this.draft = params.draft == undefined ? true : params.draft;
         this.name = params.name || '';
         this.reward = params.reward || '';
-        this.rewardClaimed = params.rewardClaimed == undefined ? false : params.rewardClaimed;
+        this.rewardDate = params.rewardDate ? new Date(params.rewardDate) : null;
         this.repeat = params.repeat == undefined ? false : params.repeat;
-        this._elem;
+        this._elem = null;
     }
 
     render() {
@@ -17,17 +18,17 @@ export default class Goal {
             this.renderForm();
         });
 
-        let completeButton = $(`<span class="icon ${this.complete ? 'icon-ok' : 'icon-circle'} mr-3"></span>`);
+        let completeButton = $(`<span class="icon ${this.isCompleted() ? 'icon-ok' : 'icon-circle'} mr-3"></span>`);
         elem.append($('<div></div>').append(completeButton));
 
         completeButton.on('click', event => {
             event.stopPropagation();
-            this.complete = !this.complete;
-            this.rewardClaimed = false;
+            this.completeDate = this.isCompleted() ? null : new Date();
+            this.rewardDate = null;
             this.render();
             $(document).trigger('goal.complete', this);
 
-            if (this.complete && this.repeat) {
+            if (this.isCompleted() && this.repeat) {
                 let goal = new Goal({draft: false, name: this.name, reward: this.reward, repeat: true});
                 goal.render();
                 $(document).trigger('goal.save', goal);
@@ -40,12 +41,12 @@ export default class Goal {
         body.append(`<div class="h5">${this.name}</div>`);
 
         if (this.reward) {
-            body.append(`<div>Reward: ${this.rewardClaimed ? '<del>' + this.reward + '</del>' : this.reward}</div>`);
+            body.append(`<div>Reward: ${this.isRewardClaimed() ? '<del>' + this.reward + '</del>' : this.reward}</div>`);
 
-            if (this.complete) {
+            if (this.isCompleted()) {
                 let claimButton;
 
-                if (this.rewardClaimed) {
+                if (this.isRewardClaimed()) {
                     claimButton = $('<button class="btn btn-secondary mt-3">Claimed</button>');
                 } else {
                     claimButton = $('<button class="btn btn-success mt-3">Claim</button>');
@@ -55,7 +56,7 @@ export default class Goal {
 
                 claimButton.on('click', event => {
                     event.stopPropagation();
-                    this.rewardClaimed = !this.rewardClaimed;
+                    this.rewardDate = this.isRewardClaimed() ? null : new Date();
                     this.render();
                     $(document).trigger('goal.rewardClaimed', this);
                 });
@@ -133,7 +134,7 @@ export default class Goal {
     }
 
     validate() {
-        return this.name;
+        return this.name.trim() != '';
     }
 
     hide() {
@@ -146,6 +147,14 @@ export default class Goal {
         if (this._elem) {
             this._elem.show();
         }
+    }
+
+    isCompleted() {
+        return this.completeDate != null;
+    }
+
+    isRewardClaimed() {
+        return this.rewardDate != null;
     }
 }
 

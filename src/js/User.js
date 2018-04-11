@@ -22,7 +22,7 @@ export default class User {
 
     hideGoals(complete) {
         this.goals.forEach(goal => {
-            if (goal.complete == complete) {
+            if (goal.isCompleted() == complete) {
                 goal.hide();
             }
         });
@@ -30,7 +30,7 @@ export default class User {
 
     showGoals(complete) {
         this.goals.forEach(goal => {
-            if (goal.complete == complete) {
+            if (goal.isCompleted() == complete) {
                 goal.show();
             }
         });
