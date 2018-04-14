@@ -87,16 +87,16 @@ export default class Goal {
 
         let body = modal.find('.modal-body').empty();
 
-        let nameInput = $(`<input class="form-control" type="text" value="${this.name}">`);
+        let nameInput = $(`<input autocapitalize="on" class="form-control" type="text" value="${this.name}">`);
         body.append($('<div class="form-group"></div>').append('<label>Name *</label>', nameInput));
 
-        let descriptionInput = $(`<textarea class="form-control">${this.description}</textarea>`);
+        let descriptionInput = $(`<textarea autocapitalize="on" class="form-control">${this.description}</textarea>`);
         body.append($('<div class="form-group"></div>').append('<label>Description</label>', descriptionInput));
 
-        let rewardInput = $(`<input class="form-control" type="text" value="${this.reward}">`);
+        let rewardInput = $(`<input autocapitalize="on" class="form-control" type="text" value="${this.reward}">`);
         body.append($('<div class="form-group"></div>').append('<label>Reward</label>', rewardInput));
 
-        let repeatInput = $(`<input class="mr-1" type="checkbox" ${this.repeat ? 'checked' : ''}>`);
+        let repeatInput = $(`<input autocapitalize="on" class="mr-1" type="checkbox" ${this.repeat ? 'checked' : ''}>`);
         body.append($('<div class="form-group mb-0"></div>').append(repeatInput, '<label>Repeat</label>'));
 
         let footer = modal.find('.modal-footer').empty();
