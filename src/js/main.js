@@ -15,13 +15,13 @@ function addGoal() {
 }
 
 function showHistory() {
-    user.renderHistory('completeDate');
+    user.renderHistory();
     historyNav.show();
     homeNav.hide();
 }
 
 function showHome() {
-    user.renderGoals('createDate');
+    user.renderGoals();
     historyNav.hide();
     homeNav.show();
 }
