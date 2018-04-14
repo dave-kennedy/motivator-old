@@ -9,7 +9,7 @@ export default class Tutorial {
         let nextButton = $('<button class="btn btn-primary">Next</button>');
         footer.append(nextButton);
 
-        nextButton.on('click', (event) => {
+        nextButton.on('click', event => {
             this.render2();
         });
 
@@ -26,14 +26,14 @@ export default class Tutorial {
         let prevButton = $('<button class="btn btn-primary mr-auto">Previous</button>');
         footer.append(prevButton);
 
-        prevButton.on('click', (event) => {
+        prevButton.on('click', event => {
             this.render1();
         });
 
         let nextButton = $('<button class="btn btn-primary">Next</button>');
         footer.append(nextButton);
 
-        nextButton.on('click', (event) => {
+        nextButton.on('click', event => {
             this.render3();
         });
 
@@ -51,7 +51,7 @@ export default class Tutorial {
         let prevButton = $('<button class="btn btn-primary mr-auto">Previous</button>');
         footer.append(prevButton);
 
-        prevButton.on('click', (event) => {
+        prevButton.on('click', event => {
             this.render2();
         });
 

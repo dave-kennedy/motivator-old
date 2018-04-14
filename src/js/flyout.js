@@ -1,6 +1,6 @@
 function hide() {
     $('.flyout-backdrop').removeClass('show').on('transitionend', event => {
-        $(event.target).remove();
+        $(event.currentTarget).remove();
     });
 
     $(this).removeClass('show');
@@ -29,8 +29,10 @@ function toggle() {
 }
 
 $(document).on('click', '[data-toggle="flyout"]', event => {
-    let target = $(event.target).data('target');
+    let target = $(event.currentTarget).data('target');
     $(target).flyout('toggle');
+}).on('click', '[data-dismiss="flyout"]', event => {
+    $(event.currentTarget).closest('.flyout.show').flyout('hide');
 });
 
 $.fn.flyout = function (config) {

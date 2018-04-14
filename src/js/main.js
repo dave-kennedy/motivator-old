@@ -20,29 +20,20 @@ function showHistory() {
     homeNav.hide();
 }
 
-function showTutorial() {
-    new Tutorial().render1();
-}
-
 function showHome() {
     user.renderGoals(false, 'createDate');
     historyNav.hide();
     homeNav.show();
 }
 
-function showMenu() {
-    menu.flyout('show');
+function showTutorial() {
+    new Tutorial().render1();
 }
 
-function hideMenu() {
-    menu.flyout('hide');
-}
-
-let user = new User(),
-    userJson = localStorage.getItem('user'),
-    menu = $('#menu'),
+let historyNav = $('#history-nav'),
     homeNav = $('#home-nav'),
-    historyNav = $('#history-nav');
+    user = new User(),
+    userJson = localStorage.getItem('user');
 
 if (userJson) {
     user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));
@@ -52,26 +43,25 @@ if (userJson) {
 
 showHome();
 
-$(document).on('click', event => {
-    let action = $(event.target).data('action') || $(event.target).parent().data('action');
+$(document).on('click', '[data-action]', event => {
+    let action = $(event.currentTarget).data('action');
 
     if (action == 'addGoal') {
         addGoal();
-        hideMenu();
     } else if (action == 'showHistory') {
         showHistory();
-        hideMenu();
-    } else if (action == 'showTutorial') {
-        showTutorial();
-        hideMenu();
     } else if (action == 'showHome') {
         showHome();
-    } else if (action == 'showMenu') {
-        showMenu();
+    } else if (action == 'showTutorial') {
+        showTutorial();
     }
 });
 
 $(document).on('goal.complete', (event, goal) => {
+    saveUser();
+});
+
+$(document).on('goal.rewardClaimed', (event, goal) => {
     saveUser();
 });
 
@@ -82,10 +72,6 @@ $(document).on('goal.delete', (event, goal) => {
 
 $(document).on('goal.save', (event, goal) => {
     user.addGoal(goal);
-    saveUser();
-});
-
-$(document).on('goal.rewardClaimed', (event, goal) => {
     saveUser();
 });
 
