@@ -31,6 +31,10 @@
     background-image: url('../../img/icon-run-48.png');
 }
 
+.icon-settings {
+    background-image: url('../../img/icon-settings-48.png');
+}
+
 .icon-sm {
     height: 24px;
     width: 24px;
@@ -56,8 +60,16 @@
     background-image: url('../../img/icon-menu-24.png');
 }
 
+.icon-settings-sm {
+    background-image: url('../../img/icon-settings-24.png');
+}
+
 .b-3 {
     bottom: 1rem;
+}
+
+.l-3 {
+    left: 1rem;
 }
 
 .r-3 {

@@ -1,4 +1,5 @@
 import Goal from './Goal.js';
+import Options from './Options.js';
 import Tutorial from './Tutorial.js';
 import User from './User.js';
 
@@ -30,6 +31,10 @@ function showTutorial() {
     new Tutorial().render1();
 }
 
+function showOptions() {
+    new Options().render();
+}
+
 let historyNav = $('#history-nav'),
     homeNav = $('#home-nav'),
     user = new User(),
@@ -54,6 +59,8 @@ $(document).on('click', '[data-action]', event => {
         showHome();
     } else if (action == 'showTutorial') {
         showTutorial();
+    } else if (action == 'showOptions') {
+        showOptions();
     }
 });
 
