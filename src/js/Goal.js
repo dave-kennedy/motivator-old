@@ -115,18 +115,18 @@ export default class Goal {
         footer.append(saveButton);
 
         saveButton.on('click', event => {
-            if (!this.validate(name)) {
+            if (!this.validate(nameInput.val())) {
                 event.stopPropagation();
                 body.prepend('<div class="alert alert-danger">Fields marked with an asterisk (*) are required.</div>');
                 return;
             }
 
             this.createDate = new Date();
-            this.description = descriptionInput.value;
+            this.description = descriptionInput.val();
             this.draft = false;
-            this.name = nameInput.value;
-            this.repeat = repeatInput.checked;
-            this.reward = rewardInput.value;
+            this.name = nameInput.val();
+            this.repeat = repeatInput.prop('checked');
+            this.reward = rewardInput.val();
             this.render();
             $(document).trigger('goal.save', this);
         });
