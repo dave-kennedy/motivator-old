@@ -1,12 +1,13 @@
 export default class Goal {
     constructor (params = {}) {
-        this.createDate = params.createDate ? new Date(params.createDate) : new Date();
         this.completeDate = params.completeDate ? new Date(params.completeDate) : null;
+        this.createDate = params.createDate ? new Date(params.createDate) : new Date();
+        this.description = params.description || '';
         this.draft = params.draft == undefined ? true : params.draft;
         this.name = params.name || '';
+        this.repeat = params.repeat == undefined ? false : params.repeat;
         this.reward = params.reward || '';
         this.rewardDate = params.rewardDate ? new Date(params.rewardDate) : null;
-        this.repeat = params.repeat == undefined ? false : params.repeat;
         this._elem = null;
     }
 
@@ -38,6 +39,10 @@ export default class Goal {
         elem.append(body);
 
         body.append(`<div class="h5">${this.name} ${this.repeat ? '<span class="icon icon-sm icon-repeat-sm"></span>' : ''}</div>`);
+
+        if (this.description) {
+            body.append(`<div class="text-secondary">${this.description}</div>`);
+        }
 
         if (this.reward) {
             body.append(`<div>Reward: ${this.isRewardClaimed() ? '<del>' + this.reward + '</del>' : this.reward}</div>`);
@@ -89,6 +94,13 @@ export default class Goal {
             this.name = event.target.value;
         });
 
+        let descriptionInput = $(`<textarea class="form-control">${this.description}</textarea>`);
+        body.append($('<div class="form-group"></div>').append('<label>Description</label>', descriptionInput));
+
+        descriptionInput.on('change', event => {
+            this.description = event.target.value;
+        });
+
         let rewardInput = $(`<input class="form-control" type="text" value="${this.reward}">`);
         body.append($('<div class="form-group"></div>').append('<label>Reward</label>', rewardInput));
 
@@ -105,13 +117,15 @@ export default class Goal {
 
         let footer = modal.find('.modal-footer').empty();
 
-        let deleteButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>');
-        footer.append(deleteButton);
+        if (!this.draft) {
+            let deleteButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>');
+            footer.append(deleteButton);
 
-        deleteButton.on('click', event => {
-            this.remove();
-            $(document).trigger('goal.delete', this);
-        });
+            deleteButton.on('click', event => {
+                this.remove();
+                $(document).trigger('goal.delete', this);
+            });
+        }
 
         let saveButton = $('<button class="btn btn-primary" data-dismiss="modal">Save</button>');
         footer.append(saveButton);
