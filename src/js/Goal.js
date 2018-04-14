@@ -37,7 +37,7 @@ export default class Goal {
         let body = $('<div class="media-body"></div>');
         elem.append(body);
 
-        body.append(`<div class="h5">${this.name}</div>`);
+        body.append(`<div class="h5">${this.name} ${this.repeat ? '<span class="icon icon-sm icon-repeat-sm"></span>' : ''}</div>`);
 
         if (this.reward) {
             body.append(`<div>Reward: ${this.isRewardClaimed() ? '<del>' + this.reward + '</del>' : this.reward}</div>`);
