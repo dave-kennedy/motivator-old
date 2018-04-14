@@ -1,7 +1,7 @@
 export default class Goal {
     constructor (params = {}) {
         this.completeDate = params.completeDate ? new Date(params.completeDate) : null;
-        this.createDate = params.createDate ? new Date(params.createDate) : new Date();
+        this.createDate = params.createDate ? new Date(params.createDate) : null;
         this.description = params.description || '';
         this.draft = params.draft == undefined ? true : params.draft;
         this.name = params.name || '';
@@ -121,6 +121,7 @@ export default class Goal {
                 return;
             }
 
+            this.createDate = new Date();
             this.description = descriptionInput.value;
             this.draft = false;
             this.name = nameInput.value;
