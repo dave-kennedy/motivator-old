@@ -90,30 +90,14 @@ export default class Goal {
         let nameInput = $(`<input class="form-control" type="text" value="${this.name}">`);
         body.append($('<div class="form-group"></div>').append('<label>Name *</label>', nameInput));
 
-        nameInput.on('change', event => {
-            this.name = event.target.value;
-        });
-
         let descriptionInput = $(`<textarea class="form-control">${this.description}</textarea>`);
         body.append($('<div class="form-group"></div>').append('<label>Description</label>', descriptionInput));
-
-        descriptionInput.on('change', event => {
-            this.description = event.target.value;
-        });
 
         let rewardInput = $(`<input class="form-control" type="text" value="${this.reward}">`);
         body.append($('<div class="form-group"></div>').append('<label>Reward</label>', rewardInput));
 
-        rewardInput.on('change', event => {
-            this.reward = event.target.value;
-        });
-
         let repeatInput = $(`<input class="mr-1" type="checkbox" ${this.repeat ? 'checked' : ''}>`);
-        body.append($('<div class="form-group"></div>').append(repeatInput, '<label>Repeat</label>'));
-
-        repeatInput.on('change', event => {
-            this.repeat = event.target.checked;
-        });
+        body.append($('<div class="form-group mb-0"></div>').append(repeatInput, '<label>Repeat</label>'));
 
         let footer = modal.find('.modal-footer').empty();
 
@@ -131,13 +115,17 @@ export default class Goal {
         footer.append(saveButton);
 
         saveButton.on('click', event => {
-            if (!this.validate()) {
+            if (!this.validate(name)) {
                 event.stopPropagation();
                 body.prepend('<div class="alert alert-danger">Fields marked with an asterisk (*) are required.</div>');
                 return;
             }
 
+            this.description = descriptionInput.value;
             this.draft = false;
+            this.name = nameInput.value;
+            this.repeat = repeatInput.checked;
+            this.reward = rewardInput.value;
             this.render();
             $(document).trigger('goal.save', this);
         });
@@ -152,8 +140,8 @@ export default class Goal {
         }
     }
 
-    validate() {
-        return this.name.trim() != '';
+    validate(name) {
+        return name.trim() != '';
     }
 
     isCompleted() {
