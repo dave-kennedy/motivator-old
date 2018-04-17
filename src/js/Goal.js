@@ -29,7 +29,14 @@ export default class Goal {
             $(document).trigger('goal.complete', this);
 
             if (this.isCompleted() && this.repeat) {
-                let goal = new Goal({draft: false, name: this.name, reward: this.reward, repeat: true});
+                let goal = new Goal({
+                    description: this.description,
+                    draft: false,
+                    name: this.name,
+                    repeat: true,
+                    reward: this.reward
+                });
+
                 goal.render();
                 $(document).trigger('goal.save', goal);
             }
