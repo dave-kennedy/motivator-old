@@ -13,6 +13,32 @@ export default class User {
         this.goals.splice(this.goals.indexOf(goal), 1);
     }
 
+    getCompletedGoalsByDate() {
+        let completeGoals = this.goals.filter(goal => {
+            return goal.isCompleted();
+        });
+
+        if (!completeGoals.length) {
+            return;
+        }
+
+        let goalsByDate = {};
+
+        completeGoals.sort((goal1, goal2) => {
+            return goal1.completeDate.getTime() - goal2.completeDate.getTime();
+        }).forEach(goal => {
+            let completeDate = goal.completeDate.toLocaleDateString();
+
+            if (!goalsByDate[completeDate]) {
+                goalsByDate[completeDate] = [goal];
+            } else {
+                goalsByDate[completeDate].push(goal);
+            }
+        });
+
+        return goalsByDate;
+    }
+
     renderGoals() {
         let goalsList = $('#goals-list').empty();
 
@@ -25,7 +51,7 @@ export default class User {
         }
 
         currentGoals.sort((goal1, goal2) => {
-            return goal1.createDate > goal2.createDate;
+            return goal1.createDate.getTime() - goal2.createDate.getTime();
         }).forEach(goal => {
             goal.remove();
             goal.render();
@@ -33,35 +59,21 @@ export default class User {
     }
 
     renderHistory(displayDate) {
-        let goalsList = $('#goals-list').empty();
+        let goalsList = $('#goals-list').empty(),
+            completeGoals = this.getCompletedGoalsByDate();
 
-        let completedGoals = this.goals.filter(goal => {
-            return goal.isCompleted();
-        });
-
-        if (!completedGoals.length) {
+        if (!completeGoals || !Object.keys(completeGoals).length) {
             return;
         }
 
-        completedGoals.sort((goal1, goal2) => {
-            return goal1.completeDate < goal2.completeDate;
-        });
+        let completeDates = Object.keys(completeGoals);
 
         if (!displayDate) {
-            displayDate = completedGoals[0].completeDate;
+            displayDate = completeDates[completeDates.length - 1];
         }
 
-        let prevDate = completedGoals.map(goal => {
-            return goal.completeDate;
-        }).find(goalDate => {
-            return displayDate.getTime() - goalDate.getTime() > 3600000;
-        });
-
-        let nextDate = completedGoals.map(goal => {
-            return goal.completeDate;
-        }).find(goalDate => {
-            return goalDate.getTime() - displayDate.getTime() > 3600000;
-        });
+        let prevDate = completeDates[completeDates.indexOf(displayDate) - 1],
+            nextDate = completeDates[completeDates.indexOf(displayDate) + 1];
 
         let pagination = $('<div class="pagination justify-content-center mb-3"></div>');
         goalsList.append(pagination);
@@ -75,7 +87,7 @@ export default class User {
             });
         }
 
-        let dateButton = $(`<div class="page-item disabled"><a class="page-link">${displayDate.toLocaleDateString()}</a></div>`);
+        let dateButton = $(`<div class="page-item disabled"><a class="page-link">${displayDate}</a></div>`);
         pagination.append(dateButton);
 
         if (nextDate) {
@@ -87,9 +99,7 @@ export default class User {
             });
         }
 
-        completedGoals.filter(goal => {
-            return goal.completeDate.toLocaleDateString() == displayDate.toLocaleDateString();
-        }).forEach(goal => {
+        completeGoals[displayDate].forEach(goal => {
             goal.remove();
             goal.render();
         });
