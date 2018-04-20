@@ -80,3 +80,23 @@
     right: 1rem;
 }
 
+.collapse-toggle::before {
+    border-bottom: none;
+    border-left: 0.3em solid transparent;
+    border-right: 0.3em solid transparent;
+    border-top: 0.3em solid;
+    content: '';
+    display: inline-block;
+    height: 0;
+    margin-right: 0.25em;
+    vertical-align: middle;
+    width: 0;
+}
+
+.collapse-toggle.collapsed::before {
+    border-bottom: 0.3em solid transparent;
+    border-left: 0.3em solid;
+    border-right: none;
+    border-top: 0.3em solid transparent;
+}
+

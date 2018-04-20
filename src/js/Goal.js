@@ -105,7 +105,33 @@ export default class Goal {
         body.append($('<div class="form-group"></div>').append('<label>Reward</label>', rewardInput));
 
         let repeatInput = $(`<input autocapitalize="on" class="mr-1" type="checkbox" ${this.repeat ? 'checked' : ''}>`);
-        body.append($('<div class="form-group mb-0"></div>').append(repeatInput, '<label>Repeat</label>'));
+        body.append($('<div class="form-group"></div>').append(repeatInput, '<label>Repeat</label>'));
+
+        let createDateInput, createTimeInput, completeDateInput, completeTimeInput, rewardDateInput, rewardTimeInput;
+
+        if (!this.draft) {
+            let detailsButton = $('<div><a class="collapse-toggle collapsed" data-toggle="collapse" href="#details">Details</a></div>');
+            body.append(detailsButton);
+
+            let details = $('<div class="collapse" id="details"></div>');
+            body.append(details);
+
+            createDateInput = $(`<input class="d-inline form-control w-50" type="date" value="${this._getISODate(this.createDate)}">`);
+            createTimeInput = $(`<input class="d-inline form-control w-50" type="time" value="${this._getISOTime(this.createDate)}">`);
+            details.append($('<div class="form-group"></div>').append('<label class="d-block">Created</label>', createDateInput, createTimeInput));
+
+            if (this.isCompleted()) {
+                completeDateInput = $(`<input class="d-inline form-control w-50" type="date" value="${this._getISODate(this.completeDate)}">`);
+                completeTimeInput = $(`<input class="d-inline form-control w-50" type="time" value="${this._getISOTime(this.completeDate)}">`);
+                details.append($('<div class="form-group"></div>').append('<label class="d-block">Completed</label>', completeDateInput, completeTimeInput));
+            }
+
+            if (this.isRewardClaimed()) {
+                rewardDateInput = $(`<input class="d-inline form-control w-50" type="date" value="${this._getISODate(this.rewardDate)}">`);
+                rewardTimeInput = $(`<input class="d-inline form-control w-50" type="time" value="${this._getISOTime(this.rewardDate)}">`);
+                details.append($('<div class="form-group"></div>').append('<label class="d-block">Reward claimed</label>', rewardDateInput, rewardTimeInput));
+            }
+        }
 
         let footer = modal.find('.modal-footer').empty();
 
@@ -129,9 +155,22 @@ export default class Goal {
                 return;
             }
 
-            this.createDate = new Date();
+            if (this.draft) {
+                this.createDate = new Date();
+                this.draft = false;
+            } else {
+                this.createDate = new Date(`${createDateInput.val()}T${createTimeInput.val()}`);
+
+                if (this.isCompleted()) {
+                    this.completeDate = new Date(`${completeDateInput.val()}T${completeTimeInput.val()}`);
+                }
+
+                if (this.isRewardClaimed()) {
+                    this.rewardDate = new Date(`${rewardDateInput.val()}T${rewardTimeInput.val()}`);
+                }
+            }
+
             this.description = descriptionInput.val();
-            this.draft = false;
             this.name = nameInput.val();
             this.repeat = repeatInput.prop('checked');
             this.reward = rewardInput.val();
@@ -159,6 +198,22 @@ export default class Goal {
 
     isRewardClaimed() {
         return this.rewardDate != null;
+    }
+
+    _getISODate(date) {
+        let yyyy = date.getFullYear(),
+            mm = (date.getMonth() + 1).toString().padStart(2, '0'),
+            dd = date.getDate().toString().padStart(2, '0');
+
+        return `${yyyy}-${mm}-${dd}`;
+    }
+
+    _getISOTime(date) {
+        let hh = date.getHours().toString().padStart(2, '0'),
+            mm = date.getMinutes().toString().padStart(2, '0'),
+            ss = date.getSeconds().toString().padStart(2, '0');
+
+        return `${hh}:${mm}:${ss}`;
     }
 }
 
