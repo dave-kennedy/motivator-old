@@ -30,7 +30,7 @@ export default class Goal {
 
             if (this.isCompleted() && this.repeat) {
                 let goal = new Goal({
-                    createDate: new Date(),
+                    createDate: this.completeDate,
                     description: this.description,
                     draft: false,
                     name: this.name,
