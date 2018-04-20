@@ -82,6 +82,11 @@ $(document).on('goal.save', (event, goal) => {
     saveUser();
 });
 
+$(document).on('options.deleteGoals', event => {
+    localStorage.removeItem('user');
+    document.location.reload();
+});
+
 window.user = user;
 window.saveUser = saveUser;
 

@@ -2,16 +2,16 @@ export default class Options {
     render() {
         let modal = $('#modal');
         modal.find('.modal-title').html('Options');
-        modal.find('.modal-body').html('<p>To delete all your goals, current and completed, press the button below. ' +
-                'This is irreversible.</p>');
+        modal.find('.modal-footer').empty();
 
-        let footer = modal.find('.modal-footer').empty();
+        let body = modal.find('.modal-body').empty();
 
         let deleteGoalsButton = $('<button class="btn btn-danger" data-dismiss="modal">Delete Goals</button>');
-        footer.append(deleteGoalsButton);
+        body.append('<p>To delete all your goals, current and completed, press the button below. This is irreversible.</p>',
+                $('<p></p>').append(deleteGoalsButton));
 
         deleteGoalsButton.on('click', event => {
-            localStorage.removeItem('user');
+            $(document).trigger('options.deleteGoals');
         });
 
         modal.modal();
