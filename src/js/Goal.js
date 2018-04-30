@@ -18,14 +18,17 @@ export default class Goal {
             this.renderForm();
         });
 
-        let completeButton = $(`<span class="icon ${this.isCompleted() ? 'icon-ok' : 'icon-circle'} mr-3"></span>`);
+        let completeButton = $(`<div class="icon mr-3" data-toggle="flip">
+                <span class="${this.isCompleted() ? 'flip-down' : 'flip-up'} icon icon-circle"></span>
+                <span class="${this.isCompleted() ? 'flip-up' : 'flip-down'} icon icon-ok"></span>
+            </div>`);
         elem.append($('<div></div>').append(completeButton));
 
         completeButton.on('click', event => {
             event.stopPropagation();
             this.completeDate = this.isCompleted() ? null : new Date();
             this.rewardDate = null;
-            this.render();
+            $(event.currentTarget).children().toggleClass('flip-down flip-up');
             $(document).trigger('goal.complete', this);
 
             if (this.isCompleted() && this.repeat) {
@@ -41,6 +44,10 @@ export default class Goal {
                 goal.render();
                 $(document).trigger('goal.save', goal);
             }
+        }).one('transitionend', '.flip-down, .flip-up', event => {
+            this._elem.fadeOut(() => {
+                this.remove();
+            });
         });
 
         let body = $('<div class="media-body"></div>');
