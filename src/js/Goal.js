@@ -46,12 +46,19 @@ export default class Goal {
         return this.completeDate != null;
     }
 
+    remove() {
+        if (this._elem) {
+            this._elem.remove();
+            this._elem = null;
+        }
+    }
+
     render() {
         let elem = $('<div class="media border-bottom mb-3 pb-3"></div>');
 
         let completeButton = $(`<div class="icon mr-3" data-toggle="flip">
                 <span class="${this.isCompleted() ? 'flip-down' : 'flip-up'} icon icon-circle"></span>
-                <span class="${this.isCompleted() ? 'flip-up' : 'flip-down'} icon icon-ok"></span>
+                <span class="${this.isCompleted() ? 'flip-up' : 'flip-down'} icon icon-check"></span>
             </div>`);
         elem.append($('<div></div>').append(completeButton));
 
@@ -161,13 +168,6 @@ export default class Goal {
         });
 
         modal.modal();
-    }
-
-    remove() {
-        if (this._elem) {
-            this._elem.remove();
-            this._elem = null;
-        }
     }
 
     save(params) {

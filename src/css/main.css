@@ -11,6 +11,10 @@
     background-image: url('../../img/icon-add-48.png');
 }
 
+.icon-check {
+    background-image: url('../../img/icon-check-48.png');
+}
+
 .icon-circle {
     background-image: url('../../img/icon-circle-48.png');
 }
@@ -21,10 +25,6 @@
 
 .icon-history {
     background-image: url('../../img/icon-history-48.png');
-}
-
-.icon-ok {
-    background-image: url('../../img/icon-ok-48.png');
 }
 
 .icon-run {
