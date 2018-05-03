@@ -11,8 +11,6 @@ features:
 
 ### To do
 
-* Convert rewards to points and add total to the UI
-* New UI elements for creating rewards, claiming them, and viewing history
 * Daily goals and goal streaks
 * Fix labels
 * Fix capitalization in text fields

@@ -25,6 +25,9 @@ export default class Navbar {
                     <a class="nav-link" data-action="showHistory" data-dismiss="flyout">
                         <span class="icon icon-sm icon-history-sm"></span> History
                     </a>
+                    <a class="nav-link" data-action="showRewards" data-dismiss="flyout">
+                        <span class="icon icon-sm icon-star-sm"></span> Rewards
+                    </a>
                     <a class="nav-link" data-action="showTutorial" data-dismiss="flyout">
                         <span class="icon icon-sm icon-help-sm"></span> Tutorial
                     </a>
@@ -44,6 +47,11 @@ export default class Navbar {
     showHistory() {
         this._topNavbarBrand.html('<span class="icon icon-back-sm" data-action="showGoals"></span> History');
         this._bottomNavbar.empty();
+    }
+
+    showRewards() {
+        this._topNavbarBrand.html('<span class="icon icon-back-sm" data-action="showGoals"></span> Rewards');
+        this._bottomNavbar.html('<span class="icon icon-add ml-auto" data-action="addReward"></span>');
     }
 
     updatePointsEarned(points) {

@@ -1,6 +1,19 @@
+import Goal from './Goal.js';
+import Reward from './Reward.js';
+
 export default class User {
     constructor (params = {}) {
-        this.goals = params.goals || [];
+        if (params.goals && params.goals.length) {
+            this.goals = params.goals.map(g => new Goal(g));
+        } else {
+            this.goals = [];
+        }
+
+        if (params.rewards && params.rewards.length) {
+            this.rewards = params.rewards.map(r => new Reward(r));
+        } else {
+            this.rewards = [];
+        }
     }
 
     addGoal(goal) {
@@ -9,8 +22,18 @@ export default class User {
         }
     }
 
+    addReward(reward) {
+        if (this.rewards.indexOf(reward) == -1) {
+            this.rewards.push(reward);
+        }
+    }
+
     deleteGoal(goal) {
         this.goals.splice(this.goals.indexOf(goal), 1);
+    }
+
+    deleteReward(reward) {
+        this.rewards.splice(this.rewards.indexOf(reward), 1);
     }
 
     getCompletedGoalsByDate() {
@@ -40,11 +63,19 @@ export default class User {
     }
 
     getPointsEarned() {
-        return this.goals.filter(goal => {
+        let totalPoints = this.goals.filter(goal => {
             return goal.isCompleted();
         }).reduce((total, goal) => {
             return total + goal.points;
         }, 0);
+
+        let redeemedPoints = this.rewards.filter(reward => {
+            return reward.isRedeemed();
+        }).reduce((total, reward) => {
+            return total + reward.points;
+        }, 0);
+
+        return totalPoints - redeemedPoints;
     }
 
     renderGoals() {
@@ -113,8 +144,20 @@ export default class User {
         });
     }
 
+    renderRewards() {
+        let container = $('#container').empty();
+
+        this.rewards.forEach(reward => {
+            reward.render();
+        });
+    }
+
     setGoals(goals) {
         this.goals = goals;
+    }
+
+    setRewards(rewards) {
+        this.rewards = rewards;
     }
 }
 

@@ -1,6 +1,7 @@
 import Goal from './Goal.js';
 import Navbar from './Navbar.js';
 import Options from './Options.js';
+import Reward from './Reward.js';
 import Tutorial from './Tutorial.js';
 import User from './User.js';
 
@@ -16,6 +17,10 @@ function addGoal() {
     new Goal().renderForm();
 }
 
+function addReward() {
+    new Reward().renderForm();
+}
+
 function showGoals() {
     user.renderGoals();
     navbar.showGoals();
@@ -24,6 +29,11 @@ function showGoals() {
 function showHistory() {
     user.renderHistory();
     navbar.showHistory();
+}
+
+function showRewards() {
+    user.renderRewards();
+    navbar.showRewards();
 }
 
 function showTutorial() {
@@ -35,15 +45,12 @@ function showOptions() {
 }
 
 let navbar = new Navbar(),
-    user = new User(),
-    userJson = localStorage.getItem('user');
+    userJson = localStorage.getItem('user'),
+    user = new User(JSON.parse(userJson));
 
-if (userJson) {
-    user.setGoals(JSON.parse(userJson).goals.map(g => new Goal(g)));
-} else {
+if (!userJson) {
     showTutorial();
 }
-
 
 navbar.render();
 navbar.updatePointsEarned(user.getPointsEarned());
@@ -54,10 +61,14 @@ $(document).on('click', '[data-action]', event => {
 
     if (action == 'addGoal') {
         addGoal();
+    } else if (action == 'addReward') {
+        addReward();
     } else if (action == 'showGoals') {
         showGoals();
     } else if (action == 'showHistory') {
         showHistory();
+    } else if (action == 'showRewards') {
+        showRewards();
     } else if (action == 'showTutorial') {
         showTutorial();
     } else if (action == 'showOptions') {
@@ -80,7 +91,22 @@ $(document).on('goal.save', (event, goal) => {
     saveUser();
 });
 
-$(document).on('options.deleteGoals', event => {
+$(document).on('reward.redeem', (event, reward) => {
+    navbar.updatePointsEarned(user.getPointsEarned());
+    saveUser();
+});
+
+$(document).on('reward.delete', (event, reward) => {
+    user.deleteReward(reward);
+    saveUser();
+});
+
+$(document).on('reward.save', (event, reward) => {
+    user.addReward(reward);
+    saveUser();
+});
+
+$(document).on('options.clearData', event => {
     localStorage.removeItem('user');
     document.location.reload();
 });

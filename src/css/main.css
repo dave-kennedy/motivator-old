@@ -35,6 +35,14 @@
     background-image: url('../../img/icon-settings-48.png');
 }
 
+.icon-star {
+    background-image: url('../../img/icon-star-48.png');
+}
+
+.icon-star-check {
+    background-image: url('../../img/icon-star-check-48.png');
+}
+
 .icon-sm {
     height: 24px;
     width: 24px;

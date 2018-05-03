@@ -6,12 +6,12 @@ export default class Options {
 
         let body = modal.find('.modal-body').empty();
 
-        let deleteGoalsButton = $('<button class="btn btn-danger" data-dismiss="modal">Delete Goals</button>');
-        body.append('<p>To delete all your goals, current and completed, press the button below. This is irreversible.</p>',
-                $('<p></p>').append(deleteGoalsButton));
+        let clearDataButton = $('<button class="btn btn-danger" data-dismiss="modal">Clear data</button>');
+        body.append('<p>To delete all your data, press the button below. This is irreversible.</p>',
+                $('<p></p>').append(clearDataButton));
 
-        deleteGoalsButton.on('click', event => {
-            $(document).trigger('options.deleteGoals');
+        clearDataButton.on('click', event => {
+            $(document).trigger('options.clearData');
         });
 
         modal.modal();
