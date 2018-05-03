@@ -1,4 +1,5 @@
 import Goal from './Goal.js';
+import Navbar from './Navbar.js';
 import Options from './Options.js';
 import Tutorial from './Tutorial.js';
 import User from './User.js';
@@ -17,14 +18,12 @@ function addGoal() {
 
 function showGoals() {
     user.renderGoals();
-    goalsNav.show();
-    historyNav.hide();
+    navbar.showGoals();
 }
 
 function showHistory() {
     user.renderHistory();
-    goalsNav.hide();
-    historyNav.show();
+    navbar.showHistory();
 }
 
 function showTutorial() {
@@ -35,8 +34,7 @@ function showOptions() {
     new Options().render();
 }
 
-let goalsNav = $('#goals-nav'),
-    historyNav = $('#history-nav'),
+let navbar = new Navbar(),
     user = new User(),
     userJson = localStorage.getItem('user');
 
@@ -46,6 +44,9 @@ if (userJson) {
     showTutorial();
 }
 
+
+navbar.render();
+navbar.updatePointsEarned(user.getPointsEarned());
 showGoals();
 
 $(document).on('click', '[data-action]', event => {
@@ -65,6 +66,7 @@ $(document).on('click', '[data-action]', event => {
 });
 
 $(document).on('goal.complete', (event, goal) => {
+    navbar.updatePointsEarned(user.getPointsEarned());
     saveUser();
 });
 

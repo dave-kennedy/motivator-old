@@ -39,6 +39,14 @@ export default class User {
         return goalsByDate;
     }
 
+    getPointsEarned() {
+        return this.goals.filter(goal => {
+            return goal.isCompleted();
+        }).reduce((total, goal) => {
+            return total + goal.points;
+        }, 0);
+    }
+
     renderGoals() {
         let goalsList = $('#goals-list').empty();
 

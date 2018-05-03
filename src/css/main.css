@@ -68,6 +68,10 @@
     background-image: url('../../img/icon-settings-24.png');
 }
 
+.icon-star-sm {
+    background-image: url('../../img/icon-star-24.png');
+}
+
 .icon .icon {
     position: absolute;
 }

@@ -18,6 +18,8 @@ features:
 * Fix capitalization in text fields
 * Save on enter key
 * Enhance tutorial
+* Import/export JSON
+* About screen w/ link to Icons8
 
 ### Prerequisites
 
