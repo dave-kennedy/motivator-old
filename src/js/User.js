@@ -148,6 +148,7 @@ export default class User {
         let container = $('#container').empty();
 
         this.rewards.forEach(reward => {
+            reward.remove();
             reward.render();
         });
     }

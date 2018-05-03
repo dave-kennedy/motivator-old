@@ -77,33 +77,37 @@ $(document).on('click', '[data-action]', event => {
 });
 
 $(document).on('goal.complete', (event, goal) => {
-    navbar.updatePointsEarned(user.getPointsEarned());
     saveUser();
+    navbar.updatePointsEarned(user.getPointsEarned());
 });
 
 $(document).on('goal.delete', (event, goal) => {
     user.deleteGoal(goal);
     saveUser();
+    navbar.updatePointsEarned(user.getPointsEarned());
 });
 
 $(document).on('goal.save', (event, goal) => {
     user.addGoal(goal);
     saveUser();
+    navbar.updatePointsEarned(user.getPointsEarned());
 });
 
 $(document).on('reward.redeem', (event, reward) => {
-    navbar.updatePointsEarned(user.getPointsEarned());
     saveUser();
+    navbar.updatePointsEarned(user.getPointsEarned());
 });
 
 $(document).on('reward.delete', (event, reward) => {
     user.deleteReward(reward);
     saveUser();
+    navbar.updatePointsEarned(user.getPointsEarned());
 });
 
 $(document).on('reward.save', (event, reward) => {
     user.addReward(reward);
     saveUser();
+    navbar.updatePointsEarned(user.getPointsEarned());
 });
 
 $(document).on('options.clearData', event => {
