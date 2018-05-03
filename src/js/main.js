@@ -87,6 +87,10 @@ $(document).on('options.deleteGoals', event => {
     document.location.reload();
 });
 
+$(document).on('click', '[data-toggle="flip"]', event => {
+    $(event.currentTarget).children().toggleClass('flip-down flip-up');
+});
+
 window.user = user;
 window.saveUser = saveUser;
 
