@@ -48,7 +48,7 @@ export default class User {
     }
 
     renderGoals() {
-        let goalsList = $('#goals-list').empty();
+        let container = $('#container').empty();
 
         let currentGoals = this.goals.filter(goal => {
             return !goal.isCompleted();
@@ -67,7 +67,7 @@ export default class User {
     }
 
     renderHistory(displayDate) {
-        let goalsList = $('#goals-list').empty(),
+        let container = $('#container').empty(),
             completeGoals = this.getCompletedGoalsByDate();
 
         if (!completeGoals || !Object.keys(completeGoals).length) {
@@ -84,7 +84,7 @@ export default class User {
             nextDate = completeDates[completeDates.indexOf(displayDate) + 1];
 
         let pagination = $('<div class="pagination justify-content-center mb-3"></div>');
-        goalsList.append(pagination);
+        container.append(pagination);
 
         if (prevDate) {
             let prevButton = $('<div class="page-item"><a class="page-link">&laquo;</a></div>');

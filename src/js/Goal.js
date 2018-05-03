@@ -5,16 +5,8 @@ export default class Goal {
         this.description = params.description || '';
         this.draft = params.draft == undefined ? true : params.draft;
         this.name = params.name || '';
+        this.points = params.points || 0;
         this.repeat = params.repeat == undefined ? false : params.repeat;
-
-        if (!params.points && params.reward) {
-            this.points = this._convertRewardToPoints(params);
-        } else if (!params.points) {
-            this.points = 0;
-        } else {
-            this.points = params.points;
-        }
-
         this._elem = null;
     }
 
@@ -90,7 +82,7 @@ export default class Goal {
         if (this._elem) {
             this._elem.replaceWith(elem);
         } else {
-            $('#goals-list').append(elem);
+            $('#container').append(elem);
         }
 
         this._elem = elem;
@@ -189,46 +181,6 @@ export default class Goal {
 
     validate(params) {
         return params.name.trim() != '';
-    }
-
-    // TODO: this is a temporary fix to migrate rewards saved prior to cab7a41
-    _convertRewardToPoints(params) {
-        let points = 0,
-            reward = params.reward;
-
-        if (!isNaN(reward)) {
-            console.log(`Reward "${params.reward}" converted to ${points} points`);
-            return reward;
-        }
-
-        if (typeof reward != 'string') {
-            $('.container:first').append(`<div class="alert alert-danger">
-                    Error: could not convert reward to points. Please edit this goal or send the following information to the developer.<br>
-                    Name: ${params.name}<br>
-                    Create date: ${params.createDate}<br>
-                    Reward: ${params.reward}
-                </div>`);
-            return 0;
-        }
-
-        reward = reward.trim();
-
-        if (reward.startsWith('$')) {
-            reward = reward.substr(1);
-        }
-
-        if (!(points = parseInt(reward))) {
-            $('.container:first').append(`<div class="alert alert-danger">
-                    Error: could not convert reward to points. Please edit this goal or send the following information to the developer.<br>
-                    Name: ${params.name}<br>
-                    Create date: ${params.createDate}<br>
-                    Reward: ${params.reward}
-                </div>`);
-            return 0;
-        }
-
-        console.log(`Reward "${params.reward}" converted to ${points} points`);
-        return points;
     }
 
     _deserialize(form) {
