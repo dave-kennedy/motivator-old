@@ -15,16 +15,16 @@ function addGoal() {
     new Goal().renderForm();
 }
 
-function showHistory() {
-    user.renderHistory();
-    historyNav.show();
-    homeNav.hide();
+function showGoals() {
+    user.renderGoals();
+    goalsNav.show();
+    historyNav.hide();
 }
 
-function showHome() {
-    user.renderGoals();
-    historyNav.hide();
-    homeNav.show();
+function showHistory() {
+    user.renderHistory();
+    goalsNav.hide();
+    historyNav.show();
 }
 
 function showTutorial() {
@@ -35,8 +35,8 @@ function showOptions() {
     new Options().render();
 }
 
-let historyNav = $('#history-nav'),
-    homeNav = $('#home-nav'),
+let goalsNav = $('#goals-nav'),
+    historyNav = $('#history-nav'),
     user = new User(),
     userJson = localStorage.getItem('user');
 
@@ -46,17 +46,17 @@ if (userJson) {
     showTutorial();
 }
 
-showHome();
+showGoals();
 
 $(document).on('click', '[data-action]', event => {
     let action = $(event.currentTarget).data('action');
 
     if (action == 'addGoal') {
         addGoal();
+    } else if (action == 'showGoals') {
+        showGoals();
     } else if (action == 'showHistory') {
         showHistory();
-    } else if (action == 'showHome') {
-        showHome();
     } else if (action == 'showTutorial') {
         showTutorial();
     } else if (action == 'showOptions') {
