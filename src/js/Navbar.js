@@ -1,31 +1,53 @@
 export default class Navbar {
     constructor () {
-        this._elem = null;
-        this._brand = null;
-        this._text = null;
+        this._topNavbar = null;
+        this._topNavbarBrand = null;
+        this._topNavbarText = null;
+        this._bottomNavbar = null;
+        this._sideNavbar = null;
     }
 
     render() {
-        this._elem = $('<nav class="navbar navbar-dark bg-dark mb-3"></nav>');
-        $(document.body).prepend(this._elem);
+        this._topNavbar = $('<nav class="navbar navbar-dark bg-dark mb-3"></nav>');
+        $(document.body).prepend(this._topNavbar);
 
-        this._brand = $('<div class="navbar-brand"></div>');
-        this._elem.append(this._brand);
+        this._topNavbarBrand = $('<div class="navbar-brand"></div>');
+        this._topNavbar.append(this._topNavbarBrand);
 
-        this._text = $('<div class="navbar-text"></div>');
-        this._elem.append(this._text);
+        this._topNavbarText = $('<div class="navbar-text"></div>');
+        this._topNavbar.append(this._topNavbarText);
+
+        this._bottomNavbar = $('<nav class="navbar fixed-bottom"></nav>');
+        $(document.body).prepend(this._bottomNavbar);
+
+        this._sideNavbar = $(`<div class="flyout navbar-flyout" id="menu">
+                <div class="navbar-nav">
+                    <a class="nav-link" data-action="showHistory" data-dismiss="flyout">
+                        <span class="icon icon-sm icon-history-sm"></span> History
+                    </a>
+                    <a class="nav-link" data-action="showTutorial" data-dismiss="flyout">
+                        <span class="icon icon-sm icon-help-sm"></span> Tutorial
+                    </a>
+                    <a class="nav-link position-absolute b-3 l-3" data-action="showOptions" data-dismiss="flyout">
+                        <span class="icon icon-sm icon-settings-sm"></span> Options
+                    </a>
+                </div>
+            </div>`);
+        $(document.body).prepend(this._sideNavbar);
     }
 
     showGoals() {
-        this._brand.html('<span class="icon icon-menu-sm" data-toggle="flyout" data-target="#menu"></span> Goals');
+        this._topNavbarBrand.html('<span class="icon icon-menu-sm" data-toggle="flyout" data-target="#menu"></span> Goals');
+        this._bottomNavbar.html('<span class="icon icon-add ml-auto" data-action="addGoal"></span>');
     }
 
     showHistory() {
-        this._brand.html('<span class="icon icon-back-sm" data-action="showGoals"></span> History');
+        this._topNavbarBrand.html('<span class="icon icon-back-sm" data-action="showGoals"></span> History');
+        this._bottomNavbar.empty();
     }
 
     updatePointsEarned(points) {
-        this._text.html(`${points} <span class="icon icon-sm icon-star-sm"></span>`);
+        this._topNavbarText.html(`${points} <span class="icon icon-sm icon-star-sm"></span>`);
     }
 }
 
