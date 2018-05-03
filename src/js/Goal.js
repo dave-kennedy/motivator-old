@@ -6,20 +6,20 @@ export default class Goal {
         this.draft = params.draft == undefined ? true : params.draft;
         this.name = params.name || '';
         this.repeat = params.repeat == undefined ? false : params.repeat;
-        this.reward = params.reward || '';
-        this.rewardDate = params.rewardDate ? new Date(params.rewardDate) : null;
-        this._elem = null;
-    }
 
-    claimReward() {
-        this.rewardDate = this.isRewardClaimed() ? null : new Date();
-        this.render();
-        $(document).trigger('goal.rewardClaimed', this);
+        if (!params.points && params.reward) {
+            this.points = this._convertRewardToPoints(params);
+        } else if (!params.points) {
+            this.points = 0;
+        } else {
+            this.points = params.points;
+        }
+
+        this._elem = null;
     }
 
     complete() {
         this.completeDate = this.isCompleted() ? null : new Date();
-        this.rewardDate = null;
         $(document).trigger('goal.complete', this);
 
         if (this.isCompleted() && this.repeat) {
@@ -28,8 +28,8 @@ export default class Goal {
                 description: this.description,
                 draft: false,
                 name: this.name,
-                repeat: true,
-                reward: this.reward
+                points: this.points,
+                repeat: true
             });
 
             goal.render();
@@ -44,10 +44,6 @@ export default class Goal {
 
     isCompleted() {
         return this.completeDate != null;
-    }
-
-    isRewardClaimed() {
-        return this.rewardDate != null;
     }
 
     render() {
@@ -80,24 +76,8 @@ export default class Goal {
             body.append(`<div class="text-secondary">${this.description}</div>`);
         }
 
-        if (this.reward) {
-            body.append(`<div>Reward: ${this.isRewardClaimed() ? '<del>' + this.reward + '</del>' : this.reward}</div>`);
-
-            if (this.isCompleted()) {
-                let claimButton;
-
-                if (this.isRewardClaimed()) {
-                    claimButton = $('<button class="btn btn-secondary mt-3">Claimed</button>');
-                } else {
-                    claimButton = $('<button class="btn btn-success mt-3">Claim</button>');
-                }
-
-                body.append($('<div></div>').append(claimButton));
-
-                claimButton.on('click', event => {
-                    this.claimReward();
-                });
-            }
+        if (this.points) {
+            body.append(`<div>${this.points} point${this.points > 1 ? 's' : ''}</div>`);
         }
 
         if (this._elem) {
@@ -128,13 +108,13 @@ export default class Goal {
         let descriptionInput = $(`<textarea autocapitalize="on" class="form-control" name="description">${this.description}</textarea>`);
         form.append($('<div class="form-group"></div>').append('<label>Description</label>', descriptionInput));
 
-        let rewardInput = $(`<input autocapitalize="on" class="form-control" name="reward" type="text" value="${this.reward}">`);
-        form.append($('<div class="form-group"></div>').append('<label>Reward</label>', rewardInput));
+        let pointsInput = $(`<input autocapitalize="on" class="form-control" name="points" type="number" value="${this.points}">`);
+        form.append($('<div class="form-group"></div>').append('<label>Points</label>', pointsInput));
 
         let repeatInput = $(`<input autocapitalize="on" class="mr-1" name="repeat" type="checkbox" ${this.repeat ? 'checked' : ''}>`);
         form.append($('<div class="form-group"></div>').append(repeatInput, '<label>Repeat</label>'));
 
-        let createDateInput, createTimeInput, completeDateInput, completeTimeInput, rewardDateInput, rewardTimeInput;
+        let createDateInput, createTimeInput, completeDateInput, completeTimeInput;
 
         if (!this.draft) {
             let detailsButton = $('<div><a class="collapse-toggle collapsed" data-toggle="collapse" href="#details">Details</a></div>');
@@ -151,12 +131,6 @@ export default class Goal {
                 completeDateInput = $(`<input class="d-inline form-control w-50" name="completeDate" type="date" value="${this._getISODate(this.completeDate)}">`);
                 completeTimeInput = $(`<input class="d-inline form-control w-50" name="completeTime" type="time" value="${this._getISOTime(this.completeDate)}">`);
                 details.append($('<div class="form-group"></div>').append('<label class="d-block">Completed</label>', completeDateInput, completeTimeInput));
-            }
-
-            if (this.isRewardClaimed()) {
-                rewardDateInput = $(`<input class="d-inline form-control w-50" name="rewardDate" type="date" value="${this._getISODate(this.rewardDate)}">`);
-                rewardTimeInput = $(`<input class="d-inline form-control w-50" name="rewardTime" type="time" value="${this._getISOTime(this.rewardDate)}">`);
-                details.append($('<div class="form-group"></div>').append('<label class="d-block">Reward claimed</label>', rewardDateInput, rewardTimeInput));
             }
         }
 
@@ -203,19 +177,58 @@ export default class Goal {
         } else {
             this.createDate = params.createDate && params.createTime ? new Date(`${params.createDate}T${params.createTime}`) : null;
             this.completeDate = params.completeDate && params.completeTime ? new Date(`${params.completeDate}T${params.completeTime}`) : null;
-            this.rewardDate = params.rewardDate && params.rewardTime ? new Date(`${params.rewardDate}T${params.rewardTime}`) : null;
         }
 
         this.description = params.description || '';
         this.name = params.name || '';
+        this.points = parseInt(params.points) || 0;
         this.repeat = params.repeat == undefined ? false : params.repeat;
-        this.reward = params.reward || '';
         this.render();
         $(document).trigger('goal.save', this);
     }
 
     validate(params) {
         return params.name.trim() != '';
+    }
+
+    // TODO: this is a temporary fix to migrate rewards saved prior to cab7a41
+    _convertRewardToPoints(params) {
+        let points = 0,
+            reward = params.reward;
+
+        if (!isNaN(reward)) {
+            console.log(`Reward "${params.reward}" converted to ${points} points`);
+            return reward;
+        }
+
+        if (typeof reward != 'string') {
+            $('.container:first').append(`<div class="alert alert-danger">
+                    Error: could not convert reward to points. Please edit this goal or send the following information to the developer.<br>
+                    Name: ${params.name}<br>
+                    Create date: ${params.createDate}<br>
+                    Reward: ${params.reward}
+                </div>`);
+            return 0;
+        }
+
+        reward = reward.trim();
+
+        if (reward.startsWith('$')) {
+            reward = reward.substr(1);
+        }
+
+        if (!(points = parseInt(reward))) {
+            $('.container:first').append(`<div class="alert alert-danger">
+                    Error: could not convert reward to points. Please edit this goal or send the following information to the developer.<br>
+                    Name: ${params.name}<br>
+                    Create date: ${params.createDate}<br>
+                    Reward: ${params.reward}
+                </div>`);
+            return 0;
+        }
+
+        console.log(`Reward "${params.reward}" converted to ${points} points`);
+        return points;
     }
 
     _deserialize(form) {

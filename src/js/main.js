@@ -68,10 +68,6 @@ $(document).on('goal.complete', (event, goal) => {
     saveUser();
 });
 
-$(document).on('goal.rewardClaimed', (event, goal) => {
-    saveUser();
-});
-
 $(document).on('goal.delete', (event, goal) => {
     user.deleteGoal(goal);
     saveUser();
