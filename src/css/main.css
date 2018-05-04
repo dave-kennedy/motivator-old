@@ -27,6 +27,10 @@
     background-image: url('../../img/icon-history-48.png');
 }
 
+.icon-repeat {
+    background-image: url('../../img/icon-repeat-48.png');
+}
+
 .icon-run {
     background-image: url('../../img/icon-run-48.png');
 }
@@ -66,10 +70,6 @@
 
 .icon-menu-sm {
     background-image: url('../../img/icon-menu-24.png');
-}
-
-.icon-repeat-sm {
-    background-image: url('../../img/icon-repeat-24.png');
 }
 
 .icon-settings-sm {

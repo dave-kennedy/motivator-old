@@ -162,13 +162,19 @@ export default class Reward {
 
     _deserialize(form) {
         let obj = {};
+
         form.find('input, select, textarea').each((i, elem) => {
+            if (!elem.name) {
+                return;
+            }
+
             if (elem.type == 'checkbox') {
                 obj[elem.name] = elem.checked;
             } else {
                 obj[elem.name] = elem.value;
             }
         });
+
         return obj;
     }
 

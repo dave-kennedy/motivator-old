@@ -6,27 +6,39 @@ export default class Goal {
         this.draft = params.draft == undefined ? true : params.draft;
         this.name = params.name || '';
         this.points = params.points || 0;
-        this.repeat = params.repeat == undefined ? false : params.repeat;
+
+        // daily streaks
+        if (params.dailyCompleteDates && params.dailyCompleteDates.length) {
+            this.dailyCompleteDates = params.dailyCompleteDates.map(d => new Date(d));
+        } else {
+            this.dailyCompleteDates = [];
+        }
+
+        this.dailyTarget = params.dailyTarget || 0;
+        this.dailyTargetPoints = params.dailyTargetPoints || 0;
+
+        // private fields, not saved
         this._elem = null;
     }
 
-    complete() {
-        this.completeDate = this.isCompleted() ? null : new Date();
-        $(document).trigger('goal.complete', this);
-
-        if (this.isCompleted() && this.repeat) {
-            let goal = new Goal({
-                createDate: this.completeDate,
-                description: this.description,
-                draft: false,
-                name: this.name,
-                points: this.points,
-                repeat: true
+    animateComplete() {
+        if (this.isDaily()) {
+            this._elem.find('.flip-down, .flip-up').toggleClass('flip-down flip-up');
+        } else {
+            this._elem.fadeOut(() => {
+                this.remove();
             });
-
-            goal.render();
-            $(document).trigger('goal.save', goal);
         }
+    }
+
+    complete() {
+        if (this.isDaily()) {
+            this.dailyCompleteDates.push(new Date());
+        } else {
+            this.completeDate = this.isCompleted() ? null : new Date();
+        }
+
+        $(document).trigger('goal.complete', this);
     }
 
     delete() {
@@ -36,6 +48,10 @@ export default class Goal {
 
     isCompleted() {
         return this.completeDate != null;
+    }
+
+    isDaily() {
+        return this.dailyTarget > 0;
     }
 
     remove() {
@@ -49,17 +65,15 @@ export default class Goal {
         let elem = $('<div class="media border-bottom mb-3 pb-3"></div>');
 
         let completeButton = $(`<div class="icon mr-3" data-toggle="flip">
-                <span class="${this.isCompleted() ? 'flip-down' : 'flip-up'} icon icon-circle"></span>
+                <span class="${this.isCompleted() ? 'flip-down' : 'flip-up'} icon ${this.isDaily() ? 'icon-repeat' : 'icon-circle'}"></span>
                 <span class="${this.isCompleted() ? 'flip-up' : 'flip-down'} icon icon-check"></span>
             </div>`);
         elem.append($('<div></div>').append(completeButton));
 
         completeButton.on('click', event => {
             this.complete();
-        }).one('transitionend', '.flip-down, .flip-up', event => {
-            this._elem.fadeOut(() => {
-                this.remove();
-            });
+        }).on('transitionend', '.flip-up', event => {
+            this.animateComplete();
         });
 
         let body = $('<div class="media-body"></div>');
@@ -69,7 +83,7 @@ export default class Goal {
             this.renderForm();
         });
 
-        body.append(`<div class="h5">${this.name} ${this.repeat ? '<span class="icon icon-sm icon-repeat-sm"></span>' : ''}</div>`);
+        body.append(`<div class="h5">${this.name}</div>`);
 
         if (this.description) {
             body.append(`<div class="text-secondary">${this.description}</div>`);
@@ -110,10 +124,30 @@ export default class Goal {
         let pointsInput = $(`<input autocapitalize="on" class="form-control" name="points" type="number" value="${this.points}">`);
         form.append($('<div class="form-group"></div>').append('<label>Points</label>', pointsInput));
 
-        let repeatInput = $(`<input autocapitalize="on" class="mr-1" name="repeat" type="checkbox" ${this.repeat ? 'checked' : ''}>`);
-        form.append($('<div class="form-group"></div>').append(repeatInput, '<label>Repeat</label>'));
+        let dailyButton = $('<div><a class="collapse-toggle collapsed" data-toggle="collapse" href="#daily">Daily</a></div>');
+        form.append(dailyButton);
 
-        let createDateInput, createTimeInput, completeDateInput, completeTimeInput;
+        let daily = $('<div class="collapse" id="daily"></div>');
+        form.append(daily);
+
+        let dailyTargetInput = $(`<input autocapitalize="on" class="form-control" name="dailyTarget" type="number" value="${this.dailyTarget}">`);
+        daily.append($('<div class="form-group"></div>').append('<label>Daily target</label>', dailyTargetInput, '<small class="form-text text-muted">How many days in a row should this goal be completed?'));
+
+        let dailyTargetPointsInput = $(`<input autocapitalize="on" class="form-control" name="dailyTargetPoints" type="number" value="${this.dailyTargetPoints}">`);
+        daily.append($('<div class="form-group"></div>').append('<label>Daily target points</label>', dailyTargetPointsInput, '<small class="form-text text-muted">How many points should be awarded when the daily target is met?'));
+
+        if (this.dailyCompleteDates.length) {
+            let group = $(`<div class="form-group">
+                    <label class="d-block">Daily completed dates</label>
+                </div>`);
+            daily.append(group);
+
+            this.dailyCompleteDates.forEach((dailyCompleteDate, i) => {
+                let dailyCompleteDateInput = $(`<input class="d-inline form-control w-50" name="dailyCompleteDate[${i}]" type="date" value="${this._getISODate(dailyCompleteDate)}">`);
+                let dailyCompleteTimeInput = $(`<input class="d-inline form-control w-50" name="dailyCompleteTime[${i}]" type="time" value="${this._getISOTime(dailyCompleteDate)}">`);
+                group.append(dailyCompleteDateInput, dailyCompleteTimeInput);
+            });
+        }
 
         if (!this.draft) {
             let detailsButton = $('<div><a class="collapse-toggle collapsed" data-toggle="collapse" href="#details">Details</a></div>');
@@ -122,13 +156,13 @@ export default class Goal {
             let details = $('<div class="collapse" id="details"></div>');
             form.append(details);
 
-            createDateInput = $(`<input class="d-inline form-control w-50" name="createDate" type="date" value="${this._getISODate(this.createDate)}">`);
-            createTimeInput = $(`<input class="d-inline form-control w-50" name="createTime" type="time" value="${this._getISOTime(this.createDate)}">`);
+            let createDateInput = $(`<input class="d-inline form-control w-50" name="createDate" type="date" value="${this._getISODate(this.createDate)}">`);
+            let createTimeInput = $(`<input class="d-inline form-control w-50" name="createTime" type="time" value="${this._getISOTime(this.createDate)}">`);
             details.append($('<div class="form-group"></div>').append('<label class="d-block">Created</label>', createDateInput, createTimeInput));
 
             if (this.isCompleted()) {
-                completeDateInput = $(`<input class="d-inline form-control w-50" name="completeDate" type="date" value="${this._getISODate(this.completeDate)}">`);
-                completeTimeInput = $(`<input class="d-inline form-control w-50" name="completeTime" type="time" value="${this._getISOTime(this.completeDate)}">`);
+                let completeDateInput = $(`<input class="d-inline form-control w-50" name="completeDate" type="date" value="${this._getISODate(this.completeDate)}">`);
+                let completeTimeInput = $(`<input class="d-inline form-control w-50" name="completeTime" type="time" value="${this._getISOTime(this.completeDate)}">`);
                 details.append($('<div class="form-group"></div>').append('<label class="d-block">Completed</label>', completeDateInput, completeTimeInput));
             }
         }
@@ -167,14 +201,28 @@ export default class Goal {
             this.createDate = new Date();
             this.draft = false;
         } else {
-            this.createDate = params.createDate && params.createTime ? new Date(`${params.createDate}T${params.createTime}`) : null;
             this.completeDate = params.completeDate && params.completeTime ? new Date(`${params.completeDate}T${params.completeTime}`) : null;
+            this.createDate = params.createDate && params.createTime ? new Date(`${params.createDate}T${params.createTime}`) : null;
         }
 
         this.description = params.description || '';
         this.name = params.name || '';
         this.points = parseInt(params.points) || 0;
-        this.repeat = params.repeat == undefined ? false : params.repeat;
+
+        this.dailyCompleteDates = [];
+
+        Object.keys(params).filter(key => key.startsWith('dailyCompleteDate')).forEach(key => {
+            let dailyCompleteDate = params[key],
+                dailyCompleteTime = params[key.replace('Date', 'Time')];
+
+            if (dailyCompleteDate && dailyCompleteTime) {
+                this.dailyCompleteDates.push(new Date(`${dailyCompleteDate}T${dailyCompleteTime}`));
+            }
+        });
+
+        this.dailyTarget = params.dailyTarget || 0;
+        this.dailyTargetPoints = params.dailyTargetPoints || 0;
+
         this.render();
         $(document).trigger('goal.save', this);
     }
@@ -185,13 +233,19 @@ export default class Goal {
 
     _deserialize(form) {
         let obj = {};
+
         form.find('input, select, textarea').each((i, elem) => {
+            if (!elem.name) {
+                return;
+            }
+
             if (elem.type == 'checkbox') {
                 obj[elem.name] = elem.checked;
             } else {
                 obj[elem.name] = elem.value;
             }
         });
+
         return obj;
     }
 

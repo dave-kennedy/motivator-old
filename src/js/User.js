@@ -64,8 +64,12 @@ export default class User {
 
     getPointsEarned() {
         let totalPoints = this.goals.filter(goal => {
-            return goal.isCompleted();
+            return goal.dailyCompleteDates.length || goal.isCompleted();
         }).reduce((total, goal) => {
+            if (goal.dailyCompleteDates.length) {
+                return total + goal.dailyCompleteDates.length*goal.points;
+            }
+
             return total + goal.points;
         }, 0);
 
