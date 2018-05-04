@@ -148,13 +148,5 @@ export default class User {
             reward.render();
         });
     }
-
-    setGoals(goals) {
-        this.goals = goals;
-    }
-
-    setRewards(rewards) {
-        this.rewards = rewards;
-    }
 }
 
