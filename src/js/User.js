@@ -63,20 +63,12 @@ export default class User {
     }
 
     getPointsEarned() {
-        let totalPoints = this.goals.filter(goal => {
-            return goal.dailyCompleteDates.length || goal.isCompleted();
-        }).reduce((total, goal) => {
-            if (goal.dailyCompleteDates.length) {
-                return total + goal.dailyCompleteDates.length*goal.points;
-            }
-
-            return total + goal.points;
+        let totalPoints = this.goals.reduce((total, goal) => {
+            return total + goal.getPointsEarned();
         }, 0);
 
-        let redeemedPoints = this.rewards.filter(reward => {
-            return reward.isRedeemed();
-        }).reduce((total, reward) => {
-            return total + reward.points;
+        let redeemedPoints = this.rewards.reduce((total, reward) => {
+            return total + reward.getPointsRedeemed();
         }, 0);
 
         return totalPoints - redeemedPoints;

@@ -14,6 +14,14 @@ export default class Reward {
         $(document).trigger('reward.delete', this);
     }
 
+    getPointsRedeemed() {
+        if (!this.isRedeemed()) {
+            return 0;
+        }
+
+        return this.points;
+    }
+
     isRedeemed() {
         return this.redeemDate != null;
     }

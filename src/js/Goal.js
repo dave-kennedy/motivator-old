@@ -23,6 +23,7 @@ export default class Goal {
 
     animateComplete() {
         if (this.isDaily()) {
+            // TODO: remove from goals screen if complete, but not from history screen
             this._elem.find('.flip-down, .flip-up').toggleClass('flip-down flip-up');
         } else {
             this._elem.fadeOut(() => {
@@ -34,6 +35,11 @@ export default class Goal {
     complete() {
         if (this.isDaily()) {
             this.dailyCompleteDates.push(new Date());
+
+            if (this.dailyTarget == this.getDailyStreak()) {
+                // TODO: can you uncomplete a daily streak?
+                this.completeDate = this.isCompleted() ? this.completeDate : new Date();
+            }
         } else {
             this.completeDate = this.isCompleted() ? null : new Date();
         }
@@ -44,6 +50,55 @@ export default class Goal {
     delete() {
         this.remove();
         $(document).trigger('goal.delete', this);
+    }
+
+    getDailyStreak() {
+        let msPerDay = 1000*60*60*24,
+            completeDates = this.dailyCompleteDates.sort((date1, date2) => {
+                return date1.getTime() - date2.getTime();
+            });
+
+        return completeDates.reduce((total, date, i) => {
+            if (i == 0) {
+                return 1;
+            }
+
+            // calculate the number of days between the previous date and this one
+            let prevDate = completeDates[i - 1],
+                elapsedDays = Math.floor(date.getTime()/msPerDay) - Math.floor(prevDate.getTime()/msPerDay);
+
+            // if less than one day has elapsed, then it was completed more than once on the same day
+            // don't increment the streak counter
+            if (elapsedDays == 0) {
+                return total;
+            }
+
+            // if exactly one day has elapsed, then the goal was completed on two consecutive days
+            // increment the streak counter
+            if (elapsedDays == 1) {
+                return total + 1;
+            }
+
+            // if more than one day has elapsed, then the streak has been broken
+            // reset the streak counter
+            return 0;
+        }, 0);
+    }
+
+    getPointsEarned() {
+        if (!this.dailyCompleteDates.length && !this.isCompleted()) {
+            return 0;
+        }
+
+        if (this.dailyCompleteDates.length && this.isCompleted()) {
+            return this.dailyCompleteDates.length*this.points + this.dailyTargetPoints;
+        }
+
+        if (this.dailyCompleteDates.length) {
+            return this.dailyCompleteDates.length*this.points;
+        }
+
+        return this.points;
     }
 
     isCompleted() {
@@ -220,8 +275,8 @@ export default class Goal {
             }
         });
 
-        this.dailyTarget = params.dailyTarget || 0;
-        this.dailyTargetPoints = params.dailyTargetPoints || 0;
+        this.dailyTarget = parseInt(params.dailyTarget) || 0;
+        this.dailyTargetPoints = parseInt(params.dailyTargetPoints) || 0;
 
         this.render();
         $(document).trigger('goal.save', this);
