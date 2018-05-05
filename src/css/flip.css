@@ -1,0 +1,14 @@
+.flip-down {
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+    transform-origin: center;
+    transition: transform 1s ease;
+}
+
+.flip-up {
+    backface-visibility: hidden;
+    transform: rotateY(0deg);
+    transform-origin: center;
+    transition: transform 1s ease;
+}
+
