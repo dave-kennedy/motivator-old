@@ -42,8 +42,8 @@ export default class Reward {
         let elem = $('<div class="media border-bottom mb-3 pb-3"></div>');
 
         let redeemButton = $(`<div class="icon mr-3" data-toggle="flip">
-                <span class="${this.isRedeemed() ? 'flip-down' : 'flip-up'} icon icon-star"></span>
-                <span class="${this.isRedeemed() ? 'flip-up' : 'flip-down'} icon icon-star-check"></span>
+                <span class="${this.isRedeemed() ? 'flip-down' : 'flip-up'} icon icon-jewel"></span>
+                <span class="${this.isRedeemed() ? 'flip-up' : 'flip-down'} icon icon-check"></span>
             </div>`);
         elem.append($('<div></div>').append(redeemButton));
 
@@ -65,7 +65,7 @@ export default class Reward {
         }
 
         if (this.points) {
-            body.append(`<div>${this.points} point${this.points > 1 ? 's' : ''}</div>`);
+            body.append(`<div><span class="icon icon-sm icon-star-sm"></span> ${this.points} points</div>`);
         }
 
         if (this._elem) {
@@ -99,8 +99,6 @@ export default class Reward {
         let pointsInput = $(`<input autocapitalize="on" class="form-control" name="points" type="number" value="${this.points}">`);
         form.append($('<div class="form-group"></div>').append('<label>Points</label>', pointsInput));
 
-        let createDateInput, createTimeInput, redeemDateInput, redeemTimeInput;
-
         if (!this.draft) {
             let detailsButton = $('<div><a class="collapse-toggle collapsed" data-toggle="collapse" href="#details">Details</a></div>');
             form.append(detailsButton);
@@ -108,13 +106,13 @@ export default class Reward {
             let details = $('<div class="collapse" id="details"></div>');
             form.append(details);
 
-            createDateInput = $(`<input class="d-inline form-control w-50" name="createDate" type="date" value="${this._getISODate(this.createDate)}">`);
-            createTimeInput = $(`<input class="d-inline form-control w-50" name="createTime" type="time" value="${this._getISOTime(this.createDate)}">`);
+            let createDateInput = $(`<input class="d-inline form-control w-50" name="createDate" type="date" value="${this._getISODate(this.createDate)}">`);
+            let createTimeInput = $(`<input class="d-inline form-control w-50" name="createTime" type="time" value="${this._getISOTime(this.createDate)}">`);
             details.append($('<div class="form-group"></div>').append('<label class="d-block">Created</label>', createDateInput, createTimeInput));
 
             if (this.isRedeemed()) {
-                redeemDateInput = $(`<input class="d-inline form-control w-50" name="redeemDate" type="date" value="${this._getISODate(this.redeemDate)}">`);
-                redeemTimeInput = $(`<input class="d-inline form-control w-50" name="redeemTime" type="time" value="${this._getISOTime(this.redeemDate)}">`);
+                let redeemDateInput = $(`<input class="d-inline form-control w-50" name="redeemDate" type="date" value="${this._getISODate(this.redeemDate)}">`);
+                let redeemTimeInput = $(`<input class="d-inline form-control w-50" name="redeemTime" type="time" value="${this._getISOTime(this.redeemDate)}">`);
                 details.append($('<div class="form-group"></div>').append('<label class="d-block">Redeemed</label>', redeemDateInput, redeemTimeInput));
             }
         }

@@ -27,6 +27,10 @@
     background-image: url('../../img/icon-history-48.png');
 }
 
+.icon-jewel {
+    background-image: url('../../img/icon-jewel-48.png');
+}
+
 .icon-repeat {
     background-image: url('../../img/icon-repeat-48.png');
 }
@@ -37,14 +41,6 @@
 
 .icon-settings {
     background-image: url('../../img/icon-settings-48.png');
-}
-
-.icon-star {
-    background-image: url('../../img/icon-star-48.png');
-}
-
-.icon-star-check {
-    background-image: url('../../img/icon-star-check-48.png');
 }
 
 .icon-sm {
