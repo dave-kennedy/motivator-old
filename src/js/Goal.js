@@ -14,8 +14,8 @@ export default class Goal {
             this.dailyCompleteDates = [];
         }
 
-        this.dailyTarget = params.dailyTarget || 0;
-        this.dailyTargetPoints = params.dailyTargetPoints || 0;
+        this.dailyDuration = params.dailyDuration || 0;
+        this.dailyBonusPoints = params.dailyBonusPoints || 0;
 
         // private fields, not saved
         this._elem = null;
@@ -24,7 +24,7 @@ export default class Goal {
     addDailyCompleteDate() {
         this.dailyCompleteDates.push(new Date());
 
-        if (this.dailyTarget == this.getDailyStreak()) {
+        if (this.dailyDuration == this.getDailyStreak()) {
             this.complete();
             return;
         }
@@ -95,7 +95,7 @@ export default class Goal {
         }
 
         if (this.dailyCompleteDates.length && this.isCompleted()) {
-            return this.dailyCompleteDates.length*this.points + this.dailyTargetPoints;
+            return this.dailyCompleteDates.length*this.points + this.dailyBonusPoints;
         }
 
         if (this.dailyCompleteDates.length) {
@@ -110,7 +110,7 @@ export default class Goal {
     }
 
     isDaily() {
-        return this.dailyTarget > 0;
+        return this.dailyDuration > 0;
     }
 
     remove() {
@@ -209,15 +209,15 @@ export default class Goal {
         let daily = $('<div class="collapse" id="daily"></div>');
         form.append(daily);
 
-        let dailyTargetInput = $(`<input autocapitalize="on" class="form-control" name="dailyTarget" type="number" value="${this.dailyTarget}">`);
-        daily.append($('<div class="form-group"></div>').append('<label>Daily target</label>', dailyTargetInput, '<small class="form-text text-muted">How many days in a row should this goal be completed?'));
+        let dailyDurationInput = $(`<input autocapitalize="on" class="form-control" name="dailyDuration" type="number" value="${this.dailyDuration}">`);
+        daily.append($('<div class="form-group"></div>').append('<label>Duration</label>', dailyDurationInput, '<small class="form-text text-muted">How many days in a row should this goal be completed?'));
 
-        let dailyTargetPointsInput = $(`<input autocapitalize="on" class="form-control" name="dailyTargetPoints" type="number" value="${this.dailyTargetPoints}">`);
-        daily.append($('<div class="form-group"></div>').append('<label>Daily target points</label>', dailyTargetPointsInput, '<small class="form-text text-muted">How many points should be awarded when the daily target is met?'));
+        let dailyBonusPointsInput = $(`<input autocapitalize="on" class="form-control" name="dailyBonusPoints" type="number" value="${this.dailyBonusPoints}">`);
+        daily.append($('<div class="form-group"></div>').append('<label>Bonus points</label>', dailyBonusPointsInput, '<small class="form-text text-muted">How many points should be awarded when this goal is completed every day for the duration above?'));
 
         if (this.dailyCompleteDates.length) {
             let group = $(`<div class="form-group">
-                    <label class="d-block">Daily completed dates</label>
+                    <label class="d-block">Dates completed</label>
                 </div>`);
             daily.append(group);
 
@@ -299,8 +299,8 @@ export default class Goal {
             }
         });
 
-        this.dailyTarget = parseInt(params.dailyTarget) || 0;
-        this.dailyTargetPoints = parseInt(params.dailyTargetPoints) || 0;
+        this.dailyDuration = parseInt(params.dailyDuration) || 0;
+        this.dailyBonusPoints = parseInt(params.dailyBonusPoints) || 0;
 
         this.render();
         $(document).trigger('goal.save', this);

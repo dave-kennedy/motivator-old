@@ -98,7 +98,7 @@ testSuite.push(function testGetPointsEarned_consecutiveDays() {
             '2018-05-01T01:00:00.000Z',
             '2018-05-02T23:00:00.000Z'
         ],
-        dailyTargetPoints: 10,
+        dailyBonusPoints: 10,
         points: 3
     });
 
@@ -116,7 +116,7 @@ testSuite.push(function testGetPointsEarned_complete_consecutiveDays() {
             '2018-05-01T01:00:00.000Z',
             '2018-05-02T23:00:00.000Z'
         ],
-        dailyTargetPoints: 10,
+        dailyBonusPoints: 10,
         points: 3
     });
 
