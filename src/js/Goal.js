@@ -21,30 +21,33 @@ export default class Goal {
         this._elem = null;
     }
 
-    animateComplete() {
-        if (this.isDaily()) {
-            // TODO: remove from goals screen if complete, but not from history screen
-            this._elem.find('.flip-down, .flip-up').toggleClass('flip-down flip-up');
-        } else {
-            this._elem.fadeOut(() => {
-                this.remove();
-            });
+    addDailyCompleteDate() {
+        this.dailyCompleteDates.push(new Date());
+
+        if (this.dailyTarget == this.getDailyStreak()) {
+            this.complete();
+            return;
         }
+
+        this._elem.find('.icon:first').flip(icon => icon.flip());
+        $(document).trigger('goal.addDailyCompleteDate', this);
     }
 
     complete() {
-        if (this.isDaily()) {
-            this.dailyCompleteDates.push(new Date());
+        this.completeDate = new Date();
+        this._elem.find('.icon:first').flip(() => this._elem.fadeOut(() => this.remove()));
+        $(document).trigger('goal.complete', this);
+    }
 
-            if (this.dailyTarget == this.getDailyStreak()) {
-                // TODO: can you uncomplete a daily streak?
-                this.completeDate = this.isCompleted() ? this.completeDate : new Date();
-            }
-        } else {
-            this.completeDate = this.isCompleted() ? null : new Date();
+    reset() {
+        this.completeDate = null;
+
+        if (this.isDaily()) {
+            this.dailyCompleteDates = [];
         }
 
-        $(document).trigger('goal.complete', this);
+        this._elem.find('.icon:first').flip(() => this._elem.fadeOut(() => this.remove()));
+        $(document).trigger('goal.reset', this);
     }
 
     delete() {
@@ -52,6 +55,7 @@ export default class Goal {
         $(document).trigger('goal.delete', this);
     }
 
+    // TODO: fix timezone
     getDailyStreak() {
         let msPerDay = 1000*60*60*24,
             completeDates = this.dailyCompleteDates.sort((date1, date2) => {
@@ -119,17 +123,37 @@ export default class Goal {
     render() {
         let elem = $('<div class="media border-bottom mb-3 pb-3"></div>');
 
-        let completeButton = $(`<div class="icon mr-3" data-toggle="flip">
-                <span class="${this.isCompleted() ? 'flip-down' : 'flip-up'} icon ${this.isDaily() ? 'icon-repeat' : 'icon-circle'}"></span>
-                <span class="${this.isCompleted() ? 'flip-up' : 'flip-down'} icon icon-check"></span>
-            </div>`);
-        elem.append($('<div></div>').append(completeButton));
+        if (this.isCompleted()) {
+            let resetButton = $(`<div class="icon mr-3">
+                    <span class="flip-up icon icon-check"></span>
+                    <span class="flip-down icon icon-circle"></span>
+                </div>`);
+            elem.append($('<div></div>').append(resetButton));
 
-        completeButton.on('click', event => {
-            this.complete();
-        }).on('transitionend', '.flip-up', event => {
-            this.animateComplete();
-        });
+            resetButton.on('click', event => {
+                this._promptReset();
+            });
+        } else if (this.isDaily()) {
+            let addDailyCompleteDateButton = $(`<div class="icon mr-3">
+                    <span class="flip-up icon icon-repeat"></span>
+                    <span class="flip-down icon icon-check"></span>
+                </div>`);
+            elem.append($('<div></div>').append(addDailyCompleteDateButton));
+
+            addDailyCompleteDateButton.on('click', event => {
+                this.addDailyCompleteDate();
+            });
+        } else {
+            let completeButton = $(`<div class="icon mr-3">
+                    <span class="flip-up icon icon-circle"></span>
+                    <span class="flip-down icon icon-check"></span>
+                </div>`);
+            elem.append($('<div></div>').append(completeButton));
+
+            completeButton.on('click', event => {
+                this.complete();
+            });
+        }
 
         let body = $('<div class="media-body"></div>');
         elem.append(body);
@@ -318,6 +342,27 @@ export default class Goal {
             ss = date.getSeconds().toString().padStart(2, '0');
 
         return `${hh}:${mm}:${ss}`;
+    }
+
+    _promptReset() {
+        let modal = $('#modal');
+        modal.find('.modal-title').html('Confirm reset');
+        modal.find('.modal-body').html(`<p>Are you sure you want to reset this goal?
+                ${this.isDaily() ? 'All daily completed dates will be lost.' : ''}</p>`);
+
+        let footer = modal.find('.modal-footer').empty();
+
+        let yesButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>');
+        footer.append(yesButton);
+
+        yesButton.on('click', event => {
+            this.reset();
+        });
+
+        let noButton = $('<button class="btn btn-primary" data-dismiss="modal">No</button>');
+        footer.append(noButton);
+
+        modal.modal();
     }
 }
 

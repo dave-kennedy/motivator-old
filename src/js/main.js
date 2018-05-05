@@ -76,7 +76,17 @@ $(document).on('click', '[data-action]', event => {
     }
 });
 
+$(document).on('goal.addDailyCompleteDate', (event, goal) => {
+    saveUser();
+    navbar.updatePointsEarned(user.getPointsEarned());
+});
+
 $(document).on('goal.complete', (event, goal) => {
+    saveUser();
+    navbar.updatePointsEarned(user.getPointsEarned());
+});
+
+$(document).on('goal.reset', (event, goal) => {
     saveUser();
     navbar.updatePointsEarned(user.getPointsEarned());
 });
