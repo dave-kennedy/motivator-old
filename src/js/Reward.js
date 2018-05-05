@@ -124,7 +124,7 @@ export default class Reward {
             footer.append(deleteButton);
 
             deleteButton.on('click', event => {
-                this.delete();
+                this._promptDelete();
             });
         }
 
@@ -198,6 +198,26 @@ export default class Reward {
             ss = date.getSeconds().toString().padStart(2, '0');
 
         return `${hh}:${mm}:${ss}`;
+    }
+
+    _promptDelete() {
+        let modal = $('#modal');
+        modal.find('.modal-title').html('Confirm delete');
+        modal.find('.modal-body').html('<p>Are you sure you want to delete this reward and its history?</p>');
+
+        let footer = modal.find('.modal-footer').empty();
+
+        let yesButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>');
+        footer.append(yesButton);
+
+        yesButton.on('click', event => {
+            this.delete();
+        });
+
+        let noButton = $('<button class="btn btn-primary" data-dismiss="modal">No</button>');
+        footer.append(noButton);
+
+        modal.modal();
     }
 }
 
