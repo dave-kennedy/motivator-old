@@ -3,7 +3,7 @@
     background-repeat: no-repeat;
     display: inline-block;
     height: 48px;
-    vertical-align: middle;
+    vertical-align: -50%;
     width: 48px;
 }
 
@@ -49,6 +49,7 @@
 
 .icon-sm {
     height: 24px;
+    vertical-align: -25%;
     width: 24px;
 }
 
@@ -58,6 +59,10 @@
 
 .icon-back-sm {
     background-image: url('../../img/icon-back-24.png');
+}
+
+.icon-fast-forward-sm {
+    background-image: url('../../img/icon-fast-forward-24.png');
 }
 
 .icon-help-sm {
@@ -78,6 +83,10 @@
 
 .icon-star-sm {
     background-image: url('../../img/icon-star-24.png');
+}
+
+.icon-trophy-sm {
+    background-image: url('../../img/icon-trophy-24.png');
 }
 
 .icon .icon {

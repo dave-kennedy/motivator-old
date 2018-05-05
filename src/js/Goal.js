@@ -168,8 +168,19 @@ export default class Goal {
             body.append(`<div class="text-secondary">${this.description}</div>`);
         }
 
+        let details = $('<div class="text-secondary"></div>');
+        body.append(details);
+
         if (this.points) {
-            body.append(`<div>${this.points} point${this.points > 1 ? 's' : ''}</div>`);
+            details.append(`<span class="icon icon-sm icon-star-sm"></span> ${this.points} points`);
+        }
+
+        if (this.isDaily()) {
+            details.append(`<span class="icon icon-sm icon-fast-forward-sm ml-5"></span> ${this.getDailyStreak()}/${this.dailyDuration} days completed`);
+
+            if (this.dailyBonusPoints) {
+                details.append(`<span class="icon icon-sm icon-trophy-sm ml-5"></span> ${this.dailyBonusPoints} bonus points`);
+            }
         }
 
         if (this._elem) {
