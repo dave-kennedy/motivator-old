@@ -42,7 +42,7 @@ export default class Reward {
         let elem = $('<div class="media border-bottom mb-3 pb-3"></div>');
 
         $(`<div class="icon mr-3" data-toggle="flip">
-                <span class="${this.isRedeemed() ? 'flip-down' : 'flip-up'} icon icon-jewel"></span>
+                <span class="${this.isRedeemed() ? 'flip-down' : 'flip-up'} icon icon-money"></span>
                 <span class="${this.isRedeemed() ? 'flip-up' : 'flip-down'} icon icon-check"></span>
             </div>`).appendTo(elem).on('click', () => this.redeem());
 
