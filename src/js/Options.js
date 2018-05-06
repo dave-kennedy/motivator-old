@@ -10,9 +10,7 @@ export default class Options {
         body.append('<p>To delete all your data, press the button below. This is irreversible.</p>',
                 $('<p></p>').append(clearDataButton));
 
-        clearDataButton.on('click', event => {
-            $(document).trigger('options.clearData');
-        });
+        clearDataButton.on('click', () => $(document).trigger('options.clearData'));
 
         modal.modal();
     }

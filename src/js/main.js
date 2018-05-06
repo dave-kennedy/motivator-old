@@ -76,17 +76,17 @@ $(document).on('click', '[data-action]', event => {
     }
 });
 
-$(document).on('goal.addDailyCompleteDate', (event, goal) => {
+$(document).on('goal.complete', () => {
     saveUser();
     navbar.updatePointsEarned(user.getPointsEarned());
 });
 
-$(document).on('goal.complete', (event, goal) => {
+$(document).on('goal.dailyComplete', () => {
     saveUser();
     navbar.updatePointsEarned(user.getPointsEarned());
 });
 
-$(document).on('goal.reset', (event, goal) => {
+$(document).on('goal.reset', () => {
     saveUser();
     navbar.updatePointsEarned(user.getPointsEarned());
 });
@@ -103,7 +103,7 @@ $(document).on('goal.save', (event, goal) => {
     navbar.updatePointsEarned(user.getPointsEarned());
 });
 
-$(document).on('reward.redeem', (event, reward) => {
+$(document).on('reward.redeem', () => {
     saveUser();
     navbar.updatePointsEarned(user.getPointsEarned());
 });
@@ -120,7 +120,7 @@ $(document).on('reward.save', (event, reward) => {
     navbar.updatePointsEarned(user.getPointsEarned());
 });
 
-$(document).on('options.clearData', event => {
+$(document).on('options.clearData', () => {
     localStorage.removeItem('user');
     document.location.reload();
 });

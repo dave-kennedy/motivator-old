@@ -47,16 +47,12 @@ export default class Reward {
             </div>`);
         elem.append($('<div></div>').append(redeemButton));
 
-        redeemButton.on('click', event => {
-            this.redeem();
-        });
+        redeemButton.on('click', () => this.redeem());
 
         let body = $('<div class="media-body"></div>');
         elem.append(body);
 
-        body.on('click', event => {
-            this.renderForm();
-        });
+        body.on('click', () => this.renderForm());
 
         body.append(`<div class="h5">${this.name}</div>`);
 
@@ -123,9 +119,7 @@ export default class Reward {
             let deleteButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>');
             footer.append(deleteButton);
 
-            deleteButton.on('click', event => {
-                this._promptDelete();
-            });
+            deleteButton.on('click', () => this._promptDelete());
         }
 
         let saveButton = $('<button class="btn btn-primary" data-dismiss="modal">Save</button>');
@@ -210,9 +204,7 @@ export default class Reward {
         let yesButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>');
         footer.append(yesButton);
 
-        yesButton.on('click', event => {
-            this.delete();
-        });
+        yesButton.on('click', () => this.delete());
 
         let noButton = $('<button class="btn btn-primary" data-dismiss="modal">No</button>');
         footer.append(noButton);

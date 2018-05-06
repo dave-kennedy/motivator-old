@@ -9,9 +9,7 @@ export default class Tutorial {
         let nextButton = $('<button class="btn btn-primary">Next</button>');
         footer.append(nextButton);
 
-        nextButton.on('click', event => {
-            this.render2();
-        });
+        nextButton.on('click', () => this.render2());
 
         modal.modal();
     }
@@ -26,16 +24,12 @@ export default class Tutorial {
         let prevButton = $('<button class="btn btn-primary mr-auto">Previous</button>');
         footer.append(prevButton);
 
-        prevButton.on('click', event => {
-            this.render1();
-        });
+        prevButton.on('click', () => this.render1());
 
         let nextButton = $('<button class="btn btn-primary">Next</button>');
         footer.append(nextButton);
 
-        nextButton.on('click', event => {
-            this.render3();
-        });
+        nextButton.on('click', () => this.render3());
 
         modal.modal();
     }
@@ -51,9 +45,7 @@ export default class Tutorial {
         let prevButton = $('<button class="btn btn-primary mr-auto">Previous</button>');
         footer.append(prevButton);
 
-        prevButton.on('click', event => {
-            this.render2();
-        });
+        prevButton.on('click', () => this.render2());
 
         modal.modal();
     }

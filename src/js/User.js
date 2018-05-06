@@ -37,9 +37,7 @@ export default class User {
     }
 
     getCompletedGoalsByDate() {
-        let completeGoals = this.goals.filter(goal => {
-            return goal.isCompleted();
-        });
+        let completeGoals = this.goals.filter(goal => goal.isCompleted());
 
         if (!completeGoals.length) {
             return;
@@ -47,9 +45,7 @@ export default class User {
 
         let goalsByDate = {};
 
-        completeGoals.sort((goal1, goal2) => {
-            return goal1.completeDate.getTime() - goal2.completeDate.getTime();
-        }).forEach(goal => {
+        completeGoals.sort((goal1, goal2) => goal1.completeDate.getTime() - goal2.completeDate.getTime()).forEach(goal => {
             let completeDate = goal.completeDate.toLocaleDateString();
 
             if (!goalsByDate[completeDate]) {
@@ -63,31 +59,21 @@ export default class User {
     }
 
     getPointsEarned() {
-        let totalPoints = this.goals.reduce((total, goal) => {
-            return total + goal.getPointsEarned();
-        }, 0);
-
-        let redeemedPoints = this.rewards.reduce((total, reward) => {
-            return total + reward.getPointsRedeemed();
-        }, 0);
+        let totalPoints = this.goals.reduce((total, goal) => total + goal.getPointsEarned(), 0),
+            redeemedPoints = this.rewards.reduce((total, reward) => total + reward.getPointsRedeemed(), 0);
 
         return totalPoints - redeemedPoints;
     }
 
     renderGoals() {
-        let container = $('#container').empty();
-
-        let currentGoals = this.goals.filter(goal => {
-            return !goal.isCompleted();
-        });
+        let container = $('#container').empty(),
+            currentGoals = this.goals.filter(goal => !goal.isCompleted());
 
         if (!currentGoals.length) {
             return;
         }
 
-        currentGoals.sort((goal1, goal2) => {
-            return goal1.createDate.getTime() - goal2.createDate.getTime();
-        }).forEach(goal => {
+        currentGoals.sort((goal1, goal2) => goal1.createDate.getTime() - goal2.createDate.getTime()).forEach(goal => {
             goal.remove();
             goal.render();
         });
@@ -117,9 +103,7 @@ export default class User {
             let prevButton = $('<div class="page-item"><a class="page-link">&laquo;</a></div>');
             pagination.append(prevButton);
 
-            prevButton.on('click', event => {
-                this.renderHistory(prevDate);
-            });
+            prevButton.on('click', () => this.renderHistory(prevDate));
         }
 
         let dateButton = $(`<div class="page-item disabled"><a class="page-link">${displayDate}</a></div>`);
@@ -129,9 +113,7 @@ export default class User {
             let nextButton = $('<div class="page-item"><a class="page-link">&raquo;</a></div>');
             pagination.append(nextButton);
 
-            nextButton.on('click', event => {
-                this.renderHistory(nextDate);
-            });
+            nextButton.on('click', () => this.renderHistory(nextDate));
         }
 
         completeGoals[displayDate].forEach(goal => {
@@ -143,7 +125,7 @@ export default class User {
     renderRewards() {
         let container = $('#container').empty();
 
-        this.rewards.forEach(reward => {
+        Array.from(this.rewards).sort((reward1, reward2) => reward1.createDate.getTime - reward2.createDate.getTime()).forEach(reward => {
             reward.remove();
             reward.render();
         });

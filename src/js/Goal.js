@@ -21,7 +21,13 @@ export default class Goal {
         this._elem = null;
     }
 
-    addDailyCompleteDate() {
+    complete() {
+        this.completeDate = new Date();
+        this._elem.find('.icon:first').flip(() => this._elem.fadeOut(() => this.remove()));
+        $(document).trigger('goal.complete', this);
+    }
+
+    dailyComplete() {
         this.dailyCompleteDates.push(new Date());
 
         if (this.dailyDuration == this.getDailyStreak()) {
@@ -30,13 +36,7 @@ export default class Goal {
         }
 
         this._elem.find('.icon:first').flip(icon => icon.flip());
-        $(document).trigger('goal.addDailyCompleteDate', this);
-    }
-
-    complete() {
-        this.completeDate = new Date();
-        this._elem.find('.icon:first').flip(() => this._elem.fadeOut(() => this.remove()));
-        $(document).trigger('goal.complete', this);
+        $(document).trigger('goal.dailyComplete', this);
     }
 
     reset() {
@@ -58,9 +58,7 @@ export default class Goal {
     // TODO: fix timezone
     getDailyStreak() {
         let msPerDay = 1000*60*60*24,
-            completeDates = this.dailyCompleteDates.sort((date1, date2) => {
-                return date1.getTime() - date2.getTime();
-            });
+            completeDates = Array.from(this.dailyCompleteDates).sort((date1, date2) => date1.getTime() - date2.getTime());
 
         return completeDates.reduce((total, date, i) => {
             if (i == 0) {
@@ -130,19 +128,15 @@ export default class Goal {
                 </div>`);
             elem.append($('<div></div>').append(resetButton));
 
-            resetButton.on('click', event => {
-                this._promptReset();
-            });
+            resetButton.on('click', () => this._promptReset());
         } else if (this.isDaily()) {
-            let addDailyCompleteDateButton = $(`<div class="icon mr-3">
+            let dailyCompleteButton = $(`<div class="icon mr-3">
                     <span class="flip-up icon icon-repeat"></span>
                     <span class="flip-down icon icon-check"></span>
                 </div>`);
-            elem.append($('<div></div>').append(addDailyCompleteDateButton));
+            elem.append($('<div></div>').append(dailyCompleteButton));
 
-            addDailyCompleteDateButton.on('click', event => {
-                this.addDailyCompleteDate();
-            });
+            dailyCompleteButton.on('click', () => this.dailyComplete());
         } else {
             let completeButton = $(`<div class="icon mr-3">
                     <span class="flip-up icon icon-circle"></span>
@@ -150,17 +144,13 @@ export default class Goal {
                 </div>`);
             elem.append($('<div></div>').append(completeButton));
 
-            completeButton.on('click', event => {
-                this.complete();
-            });
+            completeButton.on('click', () => this.complete());
         }
 
         let body = $('<div class="media-body"></div>');
         elem.append(body);
 
-        body.on('click', event => {
-            this.renderForm();
-        });
+        body.on('click', () => this.renderForm());
 
         body.append(`<div class="h5">${this.name}</div>`);
 
@@ -232,9 +222,9 @@ export default class Goal {
                 </div>`);
             daily.append(group);
 
-            this.dailyCompleteDates.forEach((dailyCompleteDate, i) => {
-                let dailyCompleteDateInput = $(`<input class="d-inline form-control w-50" name="dailyCompleteDate[${i}]" type="date" value="${this._getISODate(dailyCompleteDate)}">`);
-                let dailyCompleteTimeInput = $(`<input class="d-inline form-control w-50" name="dailyCompleteTime[${i}]" type="time" value="${this._getISOTime(dailyCompleteDate)}">`);
+            this.dailyCompleteDates.forEach((date, i) => {
+                let dailyCompleteDateInput = $(`<input class="d-inline form-control w-50" name="dailyCompleteDate[${i}]" type="date" value="${this._getISODate(date)}">`);
+                let dailyCompleteTimeInput = $(`<input class="d-inline form-control w-50" name="dailyCompleteTime[${i}]" type="time" value="${this._getISOTime(date)}">`);
                 group.append(dailyCompleteDateInput, dailyCompleteTimeInput);
             });
         }
@@ -263,9 +253,7 @@ export default class Goal {
             let deleteButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>');
             footer.append(deleteButton);
 
-            deleteButton.on('click', event => {
-                this._promptDelete();
-            });
+            deleteButton.on('click', () => this._promptDelete());
         }
 
         let saveButton = $('<button class="btn btn-primary" data-dismiss="modal">Save</button>');
@@ -365,9 +353,7 @@ export default class Goal {
         let yesButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>');
         footer.append(yesButton);
 
-        yesButton.on('click', event => {
-            this.delete();
-        });
+        yesButton.on('click', () => this.delete());
 
         let noButton = $('<button class="btn btn-primary" data-dismiss="modal">No</button>');
         footer.append(noButton);
@@ -386,9 +372,7 @@ export default class Goal {
         let yesButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>');
         footer.append(yesButton);
 
-        yesButton.on('click', event => {
-            this.reset();
-        });
+        yesButton.on('click', () => this.reset());
 
         let noButton = $('<button class="btn btn-primary" data-dismiss="modal">No</button>');
         footer.append(noButton);
