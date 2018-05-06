@@ -8,17 +8,11 @@ export default class Navbar {
     }
 
     render() {
-        this._topNavbar = $('<nav class="navbar navbar-dark bg-dark mb-3"></nav>');
-        $(document.body).prepend(this._topNavbar);
+        this._topNavbar = $('<nav class="navbar navbar-dark bg-dark mb-3"></nav>').prependTo(document.body);
+        this._topNavbarBrand = $('<div class="navbar-brand"></div>').appendTo(this._topNavbar);
+        this._topNavbarText = $('<div class="navbar-text"></div>').appendTo(this._topNavbar);
 
-        this._topNavbarBrand = $('<div class="navbar-brand"></div>');
-        this._topNavbar.append(this._topNavbarBrand);
-
-        this._topNavbarText = $('<div class="navbar-text"></div>');
-        this._topNavbar.append(this._topNavbarText);
-
-        this._bottomNavbar = $('<nav class="navbar fixed-bottom"></nav>');
-        $(document.body).prepend(this._bottomNavbar);
+        this._bottomNavbar = $('<nav class="navbar fixed-bottom"></nav>').appendTo(document.body);
 
         this._sideNavbar = $(`<div class="flyout navbar-flyout" id="menu">
                 <div class="navbar-nav">
@@ -35,8 +29,7 @@ export default class Navbar {
                         <span class="icon icon-sm icon-settings-sm"></span> Options
                     </a>
                 </div>
-            </div>`);
-        $(document.body).prepend(this._sideNavbar);
+            </div>`).prependTo(document.body);
     }
 
     showGoals() {

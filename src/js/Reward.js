@@ -41,27 +41,23 @@ export default class Reward {
     render() {
         let elem = $('<div class="media border-bottom mb-3 pb-3"></div>');
 
-        let redeemButton = $(`<div class="icon mr-3" data-toggle="flip">
+        $(`<div class="icon mr-3" data-toggle="flip">
                 <span class="${this.isRedeemed() ? 'flip-down' : 'flip-up'} icon icon-jewel"></span>
                 <span class="${this.isRedeemed() ? 'flip-up' : 'flip-down'} icon icon-check"></span>
-            </div>`);
-        elem.append($('<div></div>').append(redeemButton));
+            </div>`).appendTo(elem).on('click', () => this.redeem());
 
-        redeemButton.on('click', () => this.redeem());
-
-        let body = $('<div class="media-body"></div>');
-        elem.append(body);
-
-        body.on('click', () => this.renderForm());
-
-        body.append(`<div class="h5">${this.name}</div>`);
+        let body = $(`<div class="media-body">
+                <div class="h5">${this.name}</div>
+            </div>`).appendTo(elem).on('click', () => this.renderForm());
 
         if (this.description) {
-            body.append(`<div class="text-secondary">${this.description}</div>`);
+            $(`<div class="text-secondary">${this.description}</div>`).appendTo(body);
         }
 
+        let details = $('<div class="text-secondary"></div>').appendTo(body);
+
         if (this.points) {
-            body.append(`<div><span class="icon icon-sm icon-star-sm"></span> ${this.points} points</div>`);
+            details.append(`<span class="icon icon-sm icon-star-sm"></span> ${this.points} points`);
         }
 
         if (this._elem) {
@@ -75,57 +71,66 @@ export default class Reward {
 
     renderForm() {
         let modal = $('#modal');
+        modal.find('.modal-title').html(`${this.draft ? 'New reward' : 'Edit reward'}`);
 
-        if (this.draft) {
-            modal.find('.modal-title').html('New reward');
-        } else {
-            modal.find('.modal-title').html('Edit reward');
-        }
+        let body = modal.find('.modal-body').empty();
 
-        let body = modal.find('.modal-body').empty(),
-            form = $('<form></form>');
-        body.append(form);
-
-        let nameInput = $(`<input autocapitalize="on" class="form-control" name="name" type="text" value="${this.name}">`);
-        form.append($('<div class="form-group"></div>').append('<label>Name *</label>', nameInput));
-
-        let descriptionInput = $(`<textarea autocapitalize="on" class="form-control" name="description">${this.description}</textarea>`);
-        form.append($('<div class="form-group"></div>').append('<label>Description</label>', descriptionInput));
-
-        let pointsInput = $(`<input autocapitalize="on" class="form-control" name="points" type="number" value="${this.points}">`);
-        form.append($('<div class="form-group"></div>').append('<label>Points</label>', pointsInput));
+        let form = $(`<form>
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input autocapitalize="on" class="form-control" name="name" type="text" value="${this.name}">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea autocapitalize="on" class="form-control" name="description">${this.description}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Points</label>
+                    <input autocapitalize="on" class="form-control" name="points" type="number" value="${this.points}">
+                </div>
+            </form>`).appendTo(body);
 
         if (!this.draft) {
-            let detailsButton = $('<div><a class="collapse-toggle collapsed" data-toggle="collapse" href="#details">Details</a></div>');
-            form.append(detailsButton);
+            $(`<div>
+                    <a class="collapse-toggle collapsed" data-toggle="collapse" href="#details">Details</a>
+                </div>`).appendTo(form);
 
-            let details = $('<div class="collapse" id="details"></div>');
-            form.append(details);
-
-            let createDateInput = $(`<input class="d-inline form-control w-50" name="createDate" type="date" value="${this._getISODate(this.createDate)}">`);
-            let createTimeInput = $(`<input class="d-inline form-control w-50" name="createTime" type="time" value="${this._getISOTime(this.createDate)}">`);
-            details.append($('<div class="form-group"></div>').append('<label class="d-block">Created</label>', createDateInput, createTimeInput));
+            let details = $(`<div class="collapse" id="details">
+                    <div class="form-group">
+                        <label>Created</label>
+                        <div class="form-row">
+                            <div class="col-6">
+                                <input class="form-control" name="createDate" type="date" value="${this._getISODate(this.createDate)}">
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" name="createTime" type="time" value="${this._getISOTime(this.createDate)}">
+                            </div>
+                        </div>
+                    </div>
+                </div>`).appendTo(form);
 
             if (this.isRedeemed()) {
-                let redeemDateInput = $(`<input class="d-inline form-control w-50" name="redeemDate" type="date" value="${this._getISODate(this.redeemDate)}">`);
-                let redeemTimeInput = $(`<input class="d-inline form-control w-50" name="redeemTime" type="time" value="${this._getISOTime(this.redeemDate)}">`);
-                details.append($('<div class="form-group"></div>').append('<label class="d-block">Redeemed</label>', redeemDateInput, redeemTimeInput));
+                $(`<div class="form-group">
+                        <label>Redeemed</label>
+                        <div class="form-row">
+                            <div class="col-6">
+                                <input class="form-control" name="redeemDate" type="date" value="${this._getISODate(this.redeemDate)}">
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" name="redeemTime" type="time" value="${this._getISOTime(this.redeemDate)}">
+                            </div>
+                        </div>
+                    </div>`).appendTo(details);
             }
         }
 
         let footer = modal.find('.modal-footer').empty();
 
         if (!this.draft) {
-            let deleteButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>');
-            footer.append(deleteButton);
-
-            deleteButton.on('click', () => this._promptDelete());
+            $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>').appendTo(footer).on('click', () => this._promptDelete());
         }
 
-        let saveButton = $('<button class="btn btn-primary" data-dismiss="modal">Save</button>');
-        footer.append(saveButton);
-
-        saveButton.on('click', event => {
+        $('<button class="btn btn-primary" data-dismiss="modal">Save</button>').appendTo(footer).on('click', event => {
             let params = this._deserialize(form);
 
             if (!this.validate(params)) {
@@ -200,14 +205,8 @@ export default class Reward {
         modal.find('.modal-body').html('<p>Are you sure you want to delete this reward and its history?</p>');
 
         let footer = modal.find('.modal-footer').empty();
-
-        let yesButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>');
-        footer.append(yesButton);
-
-        yesButton.on('click', () => this.delete());
-
-        let noButton = $('<button class="btn btn-primary" data-dismiss="modal">No</button>');
-        footer.append(noButton);
+        $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>').appendTo(footer).on('click', () => this.delete());
+        $('<button class="btn btn-primary" data-dismiss="modal">No</button>').appendTo(footer);
 
         modal.modal();
     }

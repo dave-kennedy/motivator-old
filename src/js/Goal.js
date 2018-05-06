@@ -122,44 +122,31 @@ export default class Goal {
         let elem = $('<div class="media border-bottom mb-3 pb-3"></div>');
 
         if (this.isCompleted()) {
-            let resetButton = $(`<div class="icon mr-3">
+            $(`<div class="icon mr-3">
                     <span class="flip-up icon icon-check"></span>
                     <span class="flip-down icon icon-circle"></span>
-                </div>`);
-            elem.append($('<div></div>').append(resetButton));
-
-            resetButton.on('click', () => this._promptReset());
+                </div>`).appendTo(elem).on('click', () => this._promptReset());
         } else if (this.isDaily()) {
-            let dailyCompleteButton = $(`<div class="icon mr-3">
+            $(`<div class="icon mr-3">
                     <span class="flip-up icon icon-repeat"></span>
                     <span class="flip-down icon icon-check"></span>
-                </div>`);
-            elem.append($('<div></div>').append(dailyCompleteButton));
-
-            dailyCompleteButton.on('click', () => this.dailyComplete());
+                </div>`).appendTo(elem).on('click', () => this.dailyComplete());
         } else {
-            let completeButton = $(`<div class="icon mr-3">
+            $(`<div class="icon mr-3">
                     <span class="flip-up icon icon-circle"></span>
                     <span class="flip-down icon icon-check"></span>
-                </div>`);
-            elem.append($('<div></div>').append(completeButton));
-
-            completeButton.on('click', () => this.complete());
+                </div>`).appendTo(elem).on('click', () => this.complete());
         }
 
-        let body = $('<div class="media-body"></div>');
-        elem.append(body);
-
-        body.on('click', () => this.renderForm());
-
-        body.append(`<div class="h5">${this.name}</div>`);
+        let body = $(`<div class="media-body">
+                <div class="h5">${this.name}</div>
+            </div>`).appendTo(elem).on('click', () => this.renderForm());
 
         if (this.description) {
-            body.append(`<div class="text-secondary">${this.description}</div>`);
+            $(`<div class="text-secondary">${this.description}</div>`).appendTo(body);
         }
 
-        let details = $('<div class="text-secondary"></div>');
-        body.append(details);
+        let details = $('<div class="text-secondary"></div>').appendTo(body);
 
         if (this.points) {
             details.append(`<span class="icon icon-sm icon-star-sm"></span> ${this.points} points`);
@@ -184,82 +171,99 @@ export default class Goal {
 
     renderForm() {
         let modal = $('#modal');
+        modal.find('.modal-title').html(`${this.draft ? 'New goal' : 'Edit goal'}`);
 
-        if (this.draft) {
-            modal.find('.modal-title').html('New goal');
-        } else {
-            modal.find('.modal-title').html('Edit goal');
-        }
+        let body = modal.find('.modal-body').empty();
 
-        let body = modal.find('.modal-body').empty(),
-            form = $('<form></form>');
-        body.append(form);
+        let form = $(`<form>
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input autocapitalize="on" class="form-control" name="name" type="text" value="${this.name}">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea autocapitalize="on" class="form-control" name="description">${this.description}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Points</label>
+                    <input autocapitalize="on" class="form-control" name="points" type="number" value="${this.points}">
+                </div>
+                <div>
+                    <a class="collapse-toggle collapsed" data-toggle="collapse" href="#daily">Daily</a>
+                </div>
+            </form>`).appendTo(body);
 
-        let nameInput = $(`<input autocapitalize="on" class="form-control" name="name" type="text" value="${this.name}">`);
-        form.append($('<div class="form-group"></div>').append('<label>Name *</label>', nameInput));
-
-        let descriptionInput = $(`<textarea autocapitalize="on" class="form-control" name="description">${this.description}</textarea>`);
-        form.append($('<div class="form-group"></div>').append('<label>Description</label>', descriptionInput));
-
-        let pointsInput = $(`<input autocapitalize="on" class="form-control" name="points" type="number" value="${this.points}">`);
-        form.append($('<div class="form-group"></div>').append('<label>Points</label>', pointsInput));
-
-        let dailyButton = $('<div><a class="collapse-toggle collapsed" data-toggle="collapse" href="#daily">Daily</a></div>');
-        form.append(dailyButton);
-
-        let daily = $('<div class="collapse" id="daily"></div>');
-        form.append(daily);
-
-        let dailyDurationInput = $(`<input autocapitalize="on" class="form-control" name="dailyDuration" type="number" value="${this.dailyDuration}">`);
-        daily.append($('<div class="form-group"></div>').append('<label>Duration</label>', dailyDurationInput, '<small class="form-text text-muted">How many days in a row should this goal be completed?'));
-
-        let dailyBonusPointsInput = $(`<input autocapitalize="on" class="form-control" name="dailyBonusPoints" type="number" value="${this.dailyBonusPoints}">`);
-        daily.append($('<div class="form-group"></div>').append('<label>Bonus points</label>', dailyBonusPointsInput, '<small class="form-text text-muted">How many points should be awarded when this goal is completed every day for the duration above?'));
+        let daily = $(`<div class="collapse" id="daily">
+                <div class="form-group">
+                    <label>Duration</label>
+                    <input autocapitalize="on" class="form-control" name="dailyDuration" type="number" value="${this.dailyDuration}">
+                    <small class="form-text text-muted">How many days in a row should this goal be completed?</small>
+                </div>
+                <div class="form-group">
+                    <label>Bonus points</label>
+                    <input autocapitalize="on" class="form-control" name="dailyBonusPoints" type="number" value="${this.dailyBonusPoints}">
+                    <small class="form-text text-muted">How many points should be awarded when this goal is completed every day for the duration above?</small>
+                </div>
+            </div>`).appendTo(form);
 
         if (this.dailyCompleteDates.length) {
             let group = $(`<div class="form-group">
-                    <label class="d-block">Dates completed</label>
-                </div>`);
-            daily.append(group);
+                    <label>Dates completed</label>
+                </div>`).appendTo(daily);
 
             this.dailyCompleteDates.forEach((date, i) => {
-                let dailyCompleteDateInput = $(`<input class="d-inline form-control w-50" name="dailyCompleteDate[${i}]" type="date" value="${this._getISODate(date)}">`);
-                let dailyCompleteTimeInput = $(`<input class="d-inline form-control w-50" name="dailyCompleteTime[${i}]" type="time" value="${this._getISOTime(date)}">`);
-                group.append(dailyCompleteDateInput, dailyCompleteTimeInput);
+                $(`<div class="form-row mb-2">
+                        <div class="col-6">
+                            <input class="form-control" name="dailyCompleteDate[${i}]" type="date" value="${this._getISODate(date)}">
+                        </div>
+                        <div class="col-6">
+                            <input class="form-control" name="dailyCompleteTime[${i}]" type="time" value="${this._getISOTime(date)}">
+                        </div>
+                    </div>`).appendTo(group);
             });
         }
 
         if (!this.draft) {
-            let detailsButton = $('<div><a class="collapse-toggle collapsed" data-toggle="collapse" href="#details">Details</a></div>');
-            form.append(detailsButton);
+            $(`<div>
+                    <a class="collapse-toggle collapsed" data-toggle="collapse" href="#details">Details</a>
+                </div>`).appendTo(form);
 
-            let details = $('<div class="collapse" id="details"></div>');
-            form.append(details);
-
-            let createDateInput = $(`<input class="d-inline form-control w-50" name="createDate" type="date" value="${this._getISODate(this.createDate)}">`);
-            let createTimeInput = $(`<input class="d-inline form-control w-50" name="createTime" type="time" value="${this._getISOTime(this.createDate)}">`);
-            details.append($('<div class="form-group"></div>').append('<label class="d-block">Created</label>', createDateInput, createTimeInput));
+            let details = $(`<div class="collapse" id="details">
+                    <div class="form-group">
+                        <label>Created</label>
+                        <div class="form-row">
+                            <div class="col-6">
+                                <input class="form-control" name="createDate" type="date" value="${this._getISODate(this.createDate)}">
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" name="createTime" type="time" value="${this._getISOTime(this.createDate)}">
+                            </div>
+                        </div>
+                    </div>
+                </div>`).appendTo(form);
 
             if (this.isCompleted()) {
-                let completeDateInput = $(`<input class="d-inline form-control w-50" name="completeDate" type="date" value="${this._getISODate(this.completeDate)}">`);
-                let completeTimeInput = $(`<input class="d-inline form-control w-50" name="completeTime" type="time" value="${this._getISOTime(this.completeDate)}">`);
-                details.append($('<div class="form-group"></div>').append('<label class="d-block">Completed</label>', completeDateInput, completeTimeInput));
+                $(`<div class="form-group">
+                        <label>Completed</label>
+                        <div class="form-row">
+                            <div class="col-6">
+                                <input class="form-control" name="completeDate" type="date" value="${this._getISODate(this.completeDate)}">
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" name="completeTime" type="time" value="${this._getISOTime(this.completeDate)}">
+                            </div>
+                        </div>
+                    </div>`).appendTo(details);
             }
         }
 
         let footer = modal.find('.modal-footer').empty();
 
         if (!this.draft) {
-            let deleteButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>');
-            footer.append(deleteButton);
-
-            deleteButton.on('click', () => this._promptDelete());
+            $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>').appendTo(footer).on('click', () => this._promptDelete());
         }
 
-        let saveButton = $('<button class="btn btn-primary" data-dismiss="modal">Save</button>');
-        footer.append(saveButton);
-
-        saveButton.on('click', event => {
+        $('<button class="btn btn-primary" data-dismiss="modal">Save</button>').appendTo(footer).on('click', event => {
             let params = this._deserialize(form);
 
             if (!this.validate(params)) {
@@ -349,14 +353,8 @@ export default class Goal {
         modal.find('.modal-body').html('<p>Are you sure you want to delete this goal and its history?</p>');
 
         let footer = modal.find('.modal-footer').empty();
-
-        let yesButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>');
-        footer.append(yesButton);
-
-        yesButton.on('click', () => this.delete());
-
-        let noButton = $('<button class="btn btn-primary" data-dismiss="modal">No</button>');
-        footer.append(noButton);
+        $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>').appendTo(footer).on('click', () => this.delete());
+        $('<button class="btn btn-primary" data-dismiss="modal">No</button>').appendTo(footer);
 
         modal.modal();
     }
@@ -368,14 +366,8 @@ export default class Goal {
                 ${this.isDaily() ? 'All daily completed dates will be lost.' : ''}</p>`);
 
         let footer = modal.find('.modal-footer').empty();
-
-        let yesButton = $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>');
-        footer.append(yesButton);
-
-        yesButton.on('click', () => this.reset());
-
-        let noButton = $('<button class="btn btn-primary" data-dismiss="modal">No</button>');
-        footer.append(noButton);
+        $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>').appendTo(footer).on('click', () => this.reset());
+        $('<button class="btn btn-primary" data-dismiss="modal">No</button>').appendTo(footer);
 
         modal.modal();
     }

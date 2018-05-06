@@ -96,24 +96,22 @@ export default class User {
         let prevDate = completeDates[completeDates.indexOf(displayDate) - 1],
             nextDate = completeDates[completeDates.indexOf(displayDate) + 1];
 
-        let pagination = $('<div class="pagination justify-content-center mb-3"></div>');
-        container.append(pagination);
+        let pagination = $('<div class="pagination justify-content-center mb-3"></div>').appendTo(container);
 
         if (prevDate) {
-            let prevButton = $('<div class="page-item"><a class="page-link">&laquo;</a></div>');
-            pagination.append(prevButton);
-
-            prevButton.on('click', () => this.renderHistory(prevDate));
+            $(`<div class="page-item">
+                    <a class="page-link">&laquo;</a>
+                </div>`).appendTo(pagination).on('click', () => this.renderHistory(prevDate));
         }
 
-        let dateButton = $(`<div class="page-item disabled"><a class="page-link">${displayDate}</a></div>`);
-        pagination.append(dateButton);
+        $(`<div class="page-item disabled">
+                <a class="page-link">${displayDate}</a>
+            </div>`).appendTo(pagination);
 
         if (nextDate) {
-            let nextButton = $('<div class="page-item"><a class="page-link">&raquo;</a></div>');
-            pagination.append(nextButton);
-
-            nextButton.on('click', () => this.renderHistory(nextDate));
+            $(`<div class="page-item">
+                    <a class="page-link">&raquo;</a>
+                </div>`).appendTo(pagination).on('click', () => this.renderHistory(nextDate));
         }
 
         completeGoals[displayDate].forEach(goal => {
@@ -123,7 +121,7 @@ export default class User {
     }
 
     renderRewards() {
-        let container = $('#container').empty();
+        $('#container').empty();
 
         Array.from(this.rewards).sort((reward1, reward2) => reward1.createDate.getTime - reward2.createDate.getTime()).forEach(reward => {
             reward.remove();

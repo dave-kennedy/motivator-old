@@ -5,11 +5,7 @@ export default class Tutorial {
         modal.find('.modal-body').html('<p>To add a goal, press the plus sign in the bottom right corner.</p>');
 
         let footer = modal.find('.modal-footer').empty();
-
-        let nextButton = $('<button class="btn btn-primary">Next</button>');
-        footer.append(nextButton);
-
-        nextButton.on('click', () => this.render2());
+        $('<button class="btn btn-primary">Next</button>').appendTo(footer).on('click', () => this.render2());
 
         modal.modal();
     }
@@ -20,16 +16,8 @@ export default class Tutorial {
         modal.find('.modal-body').html('<p>To complete a goal, press the circle icon to the left of its name.</p>');
 
         let footer = modal.find('.modal-footer').empty();
-
-        let prevButton = $('<button class="btn btn-primary mr-auto">Previous</button>');
-        footer.append(prevButton);
-
-        prevButton.on('click', () => this.render1());
-
-        let nextButton = $('<button class="btn btn-primary">Next</button>');
-        footer.append(nextButton);
-
-        nextButton.on('click', () => this.render3());
+        $('<button class="btn btn-primary mr-auto">Previous</button>').appendTo(footer).on('click', () => this.render1());
+        $('<button class="btn btn-primary">Next</button>').appendTo(footer).on('click', () => this.render3());
 
         modal.modal();
     }
@@ -41,11 +29,7 @@ export default class Tutorial {
                 'then press the history icon.</p>');
 
         let footer = modal.find('.modal-footer').empty();
-
-        let prevButton = $('<button class="btn btn-primary mr-auto">Previous</button>');
-        footer.append(prevButton);
-
-        prevButton.on('click', () => this.render2());
+        $('<button class="btn btn-primary mr-auto">Previous</button>').appendTo(footer).on('click', () => this.render2());
 
         modal.modal();
     }
