@@ -35,7 +35,7 @@ export default class Goal {
             return;
         }
 
-        this._elem.find('.icon:first').flip(icon => icon.flip());
+        this._elem.find('.icon:first').flip(icon => icon.flip().children(':first').addClass('disabled'));
         $(document).trigger('goal.dailyComplete', this);
     }
 
@@ -111,6 +111,14 @@ export default class Goal {
         return this.dailyDuration > 0;
     }
 
+    isDailyCompleted() {
+        let today = new Date().toLocaleDateString();
+
+        return this.dailyCompleteDates.some(date => {
+            return date.toLocaleDateString() == today;
+        });
+    }
+
     remove() {
         if (this._elem) {
             this._elem.remove();
@@ -126,16 +134,20 @@ export default class Goal {
                     <span class="flip-up icon icon-check"></span>
                     <span class="flip-down icon icon-circle"></span>
                 </div>`).appendTo(elem).on('click', () => this._promptReset());
+        } else if (this.isDailyCompleted()) {
+            $(`<div class="icon mr-3 disabled">
+                    <span class="icon icon-repeat"></span>
+                </div>`).appendTo(elem);
         } else if (this.isDaily()) {
             $(`<div class="icon mr-3">
                     <span class="flip-up icon icon-repeat"></span>
                     <span class="flip-down icon icon-check"></span>
-                </div>`).appendTo(elem).on('click', () => this.dailyComplete());
+                </div>`).appendTo(elem).one('click', () => this.dailyComplete());
         } else {
             $(`<div class="icon mr-3">
                     <span class="flip-up icon icon-circle"></span>
                     <span class="flip-down icon icon-check"></span>
-                </div>`).appendTo(elem).on('click', () => this.complete());
+                </div>`).appendTo(elem).one('click', () => this.complete());
         }
 
         let body = $(`<div class="media-body">

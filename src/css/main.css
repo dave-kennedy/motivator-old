@@ -7,6 +7,10 @@
     width: 48px;
 }
 
+.icon.disabled {
+    opacity: 0.25;
+}
+
 .icon-add {
     background-image: url('../../img/icon-add-48.png');
 }
