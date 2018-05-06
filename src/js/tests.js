@@ -23,49 +23,75 @@ function renderFail(name, err) {
 
 let testSuite = [];
 
-testSuite.push(function testGetDailyStreak_sameDay() {
-    let goal = new Goal({
-        dailyCompleteDates: [
-            '2018-04-30T01:00:00.000Z',
-            '2018-04-30T12:00:00.000Z',
-            '2018-04-30T23:00:00.000Z'
-        ]
-    });
-
-    let expected = 1,
-        actual = goal.getDailyStreak();
-
-    assertEqual(expected, actual);
-});
-
 testSuite.push(function testGetDailyStreak_consecutiveDays() {
     let goal = new Goal({
         dailyCompleteDates: [
-            '2018-04-30T23:00:00.000Z',
-            '2018-05-01T01:00:00.000Z',
-            '2018-05-02T23:00:00.000Z'
-        ]
+            '2018-05-04T01:00:00-06:00',
+            '2018-05-05T23:00:00-06:00',
+            '2018-05-06T01:00:00-06:00'
+        ],
+        dailyDuration: 3
     });
 
-    let expected = 3,
-        actual = goal.getDailyStreak();
+    assertEqual(3, goal.getDailyStreak());
 
-    assertEqual(expected, actual);
+    // test again with different dates
+    goal = new Goal({
+        dailyCompleteDates: [
+            '2018-05-03T01:00:00-06:00',
+            '2018-05-04T23:00:00-06:00',
+            '2018-05-05T01:00:00-06:00'
+        ],
+        dailyDuration: 3
+    });
+
+    assertEqual(3, goal.getDailyStreak());
+});
+
+testSuite.push(function testGetDailyStreak_partialStreak() {
+    let goal = new Goal({
+        dailyCompleteDates: [
+            '2018-05-03T23:00:00-06:00',
+            '2018-05-05T01:00:00-06:00',
+            '2018-05-06T23:00:00-06:00'
+        ],
+        dailyDuration: 3
+    });
+
+    assertEqual(2, goal.getDailyStreak());
+
+    // test again with different dates
+    goal = new Goal({
+        dailyCompleteDates: [
+            '2018-05-02T23:00:00-06:00',
+            '2018-05-04T01:00:00-06:00',
+            '2018-05-05T23:00:00-06:00'
+        ],
+        dailyDuration: 3
+    });
+
+    assertEqual(2, goal.getDailyStreak());
+
 });
 
 testSuite.push(function testGetDailyStreak_streakBroken() {
     let goal = new Goal({
         dailyCompleteDates: [
-            '2018-04-30T23:00:00.000Z',
-            '2018-05-01T01:00:00.000Z',
-            '2018-05-03T01:00:00.000Z'
-        ]
+            '2018-05-04T23:00:00-06:00'
+        ],
+        dailyDuration: 3
     });
 
-    let expected = 0,
-        actual = goal.getDailyStreak();
+    assertEqual(0, goal.getDailyStreak());
+});
 
-    assertEqual(expected, actual);
+testSuite.push(function testGetDailyStreak_complete() {
+    let goal = new Goal({
+        completeDate: '2018-05-01T01:00:00-06:00',
+        dailyDuration: 3
+    });
+
+    assertEqual(3, goal.getDailyStreak());
 });
 
 testSuite.push(function testGetPointsEarned_incomplete() {
@@ -73,57 +99,45 @@ testSuite.push(function testGetPointsEarned_incomplete() {
         points: 3
     });
 
-    let expected = 0,
-        actual = goal.getPointsEarned();
-
-    assertEqual(expected, actual);
+    assertEqual(0, goal.getPointsEarned());
 });
 
 testSuite.push(function testGetPointsEarned_complete() {
     let goal = new Goal({
-        completeDate: '2018-05-01T01:00:00.000Z',
+        completeDate: '2018-05-01T01:00:00-06:00',
         points: 3
     });
 
-    let expected = 3,
-        actual = goal.getPointsEarned();
-
-    assertEqual(expected, actual);
+    assertEqual(3, goal.getPointsEarned());
 });
 
-testSuite.push(function testGetPointsEarned_consecutiveDays() {
+testSuite.push(function testGetPointsEarned_incomplete_daily() {
     let goal = new Goal({
         dailyCompleteDates: [
-            '2018-04-30T23:00:00.000Z',
-            '2018-05-01T01:00:00.000Z',
-            '2018-05-02T23:00:00.000Z'
+            '2018-04-30T23:00:00-06:00',
+            '2018-05-01T01:00:00-06:00',
+            '2018-05-02T23:00:00-06:00'
         ],
         dailyBonusPoints: 10,
         points: 3
     });
 
-    let expected = 9,
-        actual = goal.getPointsEarned();
-
-    assertEqual(expected, actual);
+    assertEqual(9, goal.getPointsEarned());
 });
 
-testSuite.push(function testGetPointsEarned_complete_consecutiveDays() {
+testSuite.push(function testGetPointsEarned_complete_daily() {
     let goal = new Goal({
-        completeDate: '2018-05-02T23:00:00.000Z',
+        completeDate: '2018-05-02T23:00:00-06:00',
         dailyCompleteDates: [
-            '2018-04-30T23:00:00.000Z',
-            '2018-05-01T01:00:00.000Z',
-            '2018-05-02T23:00:00.000Z'
+            '2018-04-30T23:00:00-06:00',
+            '2018-05-01T01:00:00-06:00',
+            '2018-05-02T23:00:00-06:00'
         ],
         dailyBonusPoints: 10,
         points: 3
     });
 
-    let expected = 19,
-        actual = goal.getPointsEarned();
-
-    assertEqual(expected, actual);
+    assertEqual(19, goal.getPointsEarned());
 });
 
 testSuite.push(function testGetPointsRedeemed_unredeemed() {
@@ -131,22 +145,16 @@ testSuite.push(function testGetPointsRedeemed_unredeemed() {
         points: 3
     });
 
-    let expected = 0,
-        actual = reward.getPointsRedeemed();
-
-    assertEqual(expected, actual);
+    assertEqual(0, reward.getPointsRedeemed());
 });
 
 testSuite.push(function testGetPointsRedeemed_redeemed() {
     let reward = new Reward({
         points: 3,
-        redeemDate: '2018-05-02T23:00:00.000Z'
+        redeemDate: '2018-05-02T23:00:00-06:00'
     });
 
-    let expected = 3,
-        actual = reward.getPointsRedeemed();
-
-    assertEqual(expected, actual);
+    assertEqual(3, reward.getPointsRedeemed());
 });
 
 testSuite.forEach(test => {

@@ -55,36 +55,39 @@ export default class Goal {
         $(document).trigger('goal.delete', this);
     }
 
-    // TODO: fix timezone
     getDailyStreak() {
-        let msPerDay = 1000*60*60*24,
-            completeDates = Array.from(this.dailyCompleteDates).sort((date1, date2) => date1.getTime() - date2.getTime());
+        if (this.isCompleted()) {
+            return this.dailyDuration;
+        }
 
-        return completeDates.reduce((total, date, i) => {
-            if (i == 0) {
-                return 1;
-            }
+        let completeDates = Array.from(this.dailyCompleteDates).sort((date1, date2) => date1.getTime() - date2.getTime()),
+            mostRecentDate = completeDates.pop(),
+            today = new Date(),
+            yesterday = new Date();
 
-            // calculate the number of days between the previous date and this one
-            let prevDate = completeDates[i - 1],
-                elapsedDays = Math.floor(date.getTime()/msPerDay) - Math.floor(prevDate.getTime()/msPerDay);
+        yesterday.setDate(yesterday.getDate() - 1);
 
-            // if less than one day has elapsed, then it was completed more than once on the same day
-            // don't increment the streak counter
-            if (elapsedDays == 0) {
-                return total;
-            }
-
-            // if exactly one day has elapsed, then the goal was completed on two consecutive days
-            // increment the streak counter
-            if (elapsedDays == 1) {
-                return total + 1;
-            }
-
-            // if more than one day has elapsed, then the streak has been broken
-            // reset the streak counter
+        if (mostRecentDate.toLocaleDateString() != today.toLocaleDateString() && mostRecentDate.toLocaleDateString() != yesterday.toLocaleDateString()) {
             return 0;
-        }, 0);
+        }
+
+        let dailyStreak = 1,
+            dayBeforeMostRecentDate = new Date(mostRecentDate);
+
+        dayBeforeMostRecentDate.setDate(dayBeforeMostRecentDate.getDate() - 1);
+
+        while (completeDates.length && dailyStreak < this.dailyDuration) {
+            mostRecentDate = completeDates.pop();
+
+            if (mostRecentDate.toLocaleDateString() != dayBeforeMostRecentDate.toLocaleDateString()) {
+                break;
+            }
+
+            dailyStreak++;
+            dayBeforeMostRecentDate.setDate(dayBeforeMostRecentDate.getDate() - 1);
+        }
+
+        return dailyStreak;
     }
 
     getPointsEarned() {

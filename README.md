@@ -11,11 +11,13 @@ features:
 
 ### To do
 
-* Daily goals and goal streaks
+* Daily goals w/out duration
+* Daily details should refresh on daily complete
+* Repeat goals more than once per day
 * Fix labels
 * Fix capitalization in text fields
 * Save on enter key
-* Enhance tutorial
+* Enhance/update tutorial
 * Import/export JSON
 * About screen w/ link to Icons8
 
