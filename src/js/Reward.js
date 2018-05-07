@@ -55,13 +55,15 @@ export default class Reward {
             </div>`).appendTo(elem).on('click', () => this.renderForm());
 
         if (this.description) {
-            $(`<div class="text-secondary">${this.description}</div>`).appendTo(body);
+            $(`<div class="h6 text-secondary">${this.description}</div>`).appendTo(body);
         }
 
         let details = $('<div class="text-secondary"></div>').appendTo(body);
 
         if (this.points) {
-            details.append(`<span class="icon icon-sm icon-star-sm"></span> ${this.points} points`);
+            $(`<div class="d-inline">
+                    <span class="icon icon-sm icon-star-sm"></span> ${this.points} points
+                </div>`).appendTo(details);
         }
 
         if (this._elem) {

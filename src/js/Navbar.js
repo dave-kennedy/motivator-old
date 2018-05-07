@@ -12,7 +12,7 @@ export default class Navbar {
         this._topNavbarBrand = $('<div class="navbar-brand"></div>').appendTo(this._topNavbar);
         this._topNavbarText = $('<div class="navbar-text"></div>').appendTo(this._topNavbar);
 
-        this._bottomNavbar = $('<nav class="navbar fixed-bottom"></nav>').appendTo(document.body);
+        this._bottomNavbar = $('<div class="position-absolute b-3 r-3"></nav>').appendTo(document.body);
 
         this._sideNavbar = $(`<div class="flyout navbar-flyout" id="menu">
                 <div class="navbar-nav">
@@ -34,7 +34,7 @@ export default class Navbar {
 
     showGoals() {
         this._topNavbarBrand.html('<span class="icon icon-menu-sm" data-toggle="flyout" data-target="#menu"></span> Goals');
-        this._bottomNavbar.html('<span class="icon icon-add ml-auto" data-action="addGoal"></span>');
+        this._bottomNavbar.html('<span class="icon icon-add" data-action="addGoal"></span>');
     }
 
     showHistory() {
@@ -44,7 +44,7 @@ export default class Navbar {
 
     showRewards() {
         this._topNavbarBrand.html('<span class="icon icon-back-sm" data-action="showGoals"></span> Rewards');
-        this._bottomNavbar.html('<span class="icon icon-add ml-auto" data-action="addReward"></span>');
+        this._bottomNavbar.html('<span class="icon icon-add" data-action="addReward"></span>');
     }
 
     updatePointsEarned(points) {
