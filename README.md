@@ -12,7 +12,6 @@ features:
 ### To do
 
 * Daily goals w/out duration
-* Daily details should refresh on daily complete
 * Repeat goals more than once per day
 * Fix labels
 * Fix capitalization in text fields

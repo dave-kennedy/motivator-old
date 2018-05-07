@@ -32,6 +32,9 @@ export default class Goal {
     dailyComplete() {
         this.dailyCompleteDates.push(new Date());
 
+        this._elem.find('.icon-fast-forward-sm').parent().html(`<span class="icon icon-sm icon-fast-forward-sm"></span>
+                ${this.getDailyStreak()}/${this.dailyDuration} days completed`);
+
         if (this.dailyDuration == this.getDailyStreak()) {
             this.complete();
             return;
