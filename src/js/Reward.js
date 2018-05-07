@@ -1,11 +1,15 @@
 export default class Reward {
-    constructor (params = {}) {
+    constructor (params) {
+        params = params || {};
+
         this.createDate = params.createDate ? new Date(params.createDate) : null;
         this.description = params.description || '';
         this.draft = params.draft == undefined ? true : params.draft;
         this.name = params.name || '';
         this.points = params.points || 0;
         this.redeemDate = params.redeemDate ? new Date(params.redeemDate) : null;
+
+        // private fields, not saved
         this._elem = null;
     }
 

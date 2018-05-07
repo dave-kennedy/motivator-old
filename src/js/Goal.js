@@ -1,5 +1,7 @@
 export default class Goal {
-    constructor (params = {}) {
+    constructor (params) {
+        params = params || {};
+
         this.completeDate = params.completeDate ? new Date(params.completeDate) : null;
         this.createDate = params.createDate ? new Date(params.createDate) : null;
         this.description = params.description || '';

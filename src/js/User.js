@@ -2,7 +2,9 @@ import Goal from './Goal.js';
 import Reward from './Reward.js';
 
 export default class User {
-    constructor (params = {}) {
+    constructor (params) {
+        params = params || {};
+
         if (params.goals && params.goals.length) {
             this.goals = params.goals.map(g => new Goal(g));
         } else {
