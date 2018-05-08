@@ -190,18 +190,18 @@ export default class Goal {
         let details = $('<div class="text-secondary"></div>').appendTo(body);
 
         if (this.points) {
-            $(`<div class="d-inline mr-5">
+            $(`<div class="d-md-inline mr-md-5">
                     <span class="icon icon-sm icon-star-sm"></span> ${this.points} points
                 </div>`).appendTo(details);
         }
 
         if (this.isDaily()) {
-            $(`<div class="d-inline mr-5">
+            $(`<div class="d-md-inline mr-md-5">
                     <span class="icon icon-sm icon-fast-forward-sm"></span> ${this.getDailyStreak()}/${this.dailyDuration} days completed
                 </div>`).appendTo(details);
 
             if (this.dailyBonusPoints) {
-                $(`<div class="d-inline">
+                $(`<div class="d-md-inline">
                         <span class="icon icon-sm icon-trophy-sm"></span> ${this.dailyBonusPoints} bonus points
                     </div>`).appendTo(details);
             }
