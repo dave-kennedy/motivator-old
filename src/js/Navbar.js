@@ -12,7 +12,7 @@ export default class Navbar {
         this._topNavbarBrand = $('<div class="navbar-brand"></div>').appendTo(this._topNavbar);
         this._topNavbarText = $('<div class="navbar-text"></div>').appendTo(this._topNavbar);
 
-        this._bottomNavbar = $('<div class="position-absolute b-3 r-3"></nav>').appendTo(document.body);
+        this._bottomNavbar = $('<div class="position-fixed b-3 r-3"></nav>').appendTo(document.body);
 
         this._sideNavbar = $(`<div class="flyout navbar-flyout" id="menu">
                 <div class="navbar-nav">
