@@ -11,7 +11,7 @@ export default class Goal {
         this.repeat = params.repeat == undefined ? false : params.repeat;
 
         // daily streaks
-        this.daily = params.daily == undefined ? false : params.daily;
+        this.daily = this._migrateDaily(params);
         this.dailyBonusPoints = params.dailyBonusPoints || 0;
         this.dailyDuration = params.dailyDuration || 0;
 
@@ -418,6 +418,11 @@ export default class Goal {
         $('<button class="btn btn-primary" data-dismiss="modal">No</button>').appendTo(footer);
 
         modal.modal();
+    }
+
+    // TODO: this is a temporary fix to migrate data saved prior to 59a57e9
+    _migrateDaily(params) {
+        return params.daily || params.dailyDuration > 0;
     }
 }
 
