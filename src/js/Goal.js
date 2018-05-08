@@ -61,12 +61,12 @@ export default class Goal {
     }
 
     getDailyStreak() {
-        if (!this.dailyCompleteDates.length) {
-            return 0;
-        }
-
         if (this.isCompleted()) {
             return this.dailyDuration;
+        }
+
+        if (!this.dailyCompleteDates.length) {
+            return 0;
         }
 
         let completeDates = Array.from(this.dailyCompleteDates).sort((date1, date2) => date1.getTime() - date2.getTime()),

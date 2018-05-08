@@ -21,65 +21,55 @@ function renderFail(name, err) {
     document.body.appendChild(el);
 }
 
+// used to generate dates based on the current date (e.g. today, yesterday, two days ago)
+// necessary for testing daily streaks
+function makeDate(daysAgo, hh = 0, mm = 0, ss = 0) {
+    let date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    date.setHours(hh);
+    date.setMinutes(mm);
+    date.setSeconds(ss);
+    return date;
+}
+
 let testSuite = [];
 
-testSuite.push(function testGetDailyStreak_consecutiveDays() {
+testSuite.push(function testGetDailyStreak_mostRecentToday() {
     let goal = new Goal({
         dailyCompleteDates: [
-            '2018-05-04T01:00:00-06:00',
-            '2018-05-05T23:00:00-06:00',
-            '2018-05-06T01:00:00-06:00'
+            makeDate(4, 23), // there's a gap between this date and the next, so it shouldn't count
+            makeDate(2, 1),
+            makeDate(1, 23),
+            makeDate(0, 1)
         ],
-        dailyDuration: 3
-    });
-
-    assertEqual(3, goal.getDailyStreak());
-
-    // test again with different dates
-    goal = new Goal({
-        dailyCompleteDates: [
-            '2018-05-03T01:00:00-06:00',
-            '2018-05-04T23:00:00-06:00',
-            '2018-05-05T01:00:00-06:00'
-        ],
-        dailyDuration: 3
+        dailyDuration: 5
     });
 
     assertEqual(3, goal.getDailyStreak());
 });
 
-testSuite.push(function testGetDailyStreak_partialStreak() {
+testSuite.push(function testGetDailyStreak_mostRecentYesterday() {
     let goal = new Goal({
         dailyCompleteDates: [
-            '2018-05-03T23:00:00-06:00',
-            '2018-05-05T01:00:00-06:00',
-            '2018-05-06T23:00:00-06:00'
+            makeDate(5, 23), // there's a gap between this date and the next, so it shouldn't count
+            makeDate(3, 1),
+            makeDate(2, 23),
+            makeDate(1, 1)
         ],
-        dailyDuration: 3
+        dailyDuration: 5
     });
 
-    assertEqual(2, goal.getDailyStreak());
-
-    // test again with different dates
-    goal = new Goal({
-        dailyCompleteDates: [
-            '2018-05-02T23:00:00-06:00',
-            '2018-05-04T01:00:00-06:00',
-            '2018-05-05T23:00:00-06:00'
-        ],
-        dailyDuration: 3
-    });
-
-    assertEqual(2, goal.getDailyStreak());
-
+    assertEqual(3, goal.getDailyStreak());
 });
 
-testSuite.push(function testGetDailyStreak_streakBroken() {
+testSuite.push(function testGetDailyStreak_mostRecentTwoDaysAgo() {
     let goal = new Goal({
         dailyCompleteDates: [
-            '2018-05-04T23:00:00-06:00'
+            makeDate(4, 23),
+            makeDate(3, 1),
+            makeDate(2, 23)
         ],
-        dailyDuration: 3
+        dailyDuration: 5
     });
 
     assertEqual(0, goal.getDailyStreak());
@@ -87,7 +77,7 @@ testSuite.push(function testGetDailyStreak_streakBroken() {
 
 testSuite.push(function testGetDailyStreak_complete() {
     let goal = new Goal({
-        completeDate: '2018-05-01T01:00:00-06:00',
+        completeDate: new Date(),
         dailyDuration: 3
     });
 
@@ -104,7 +94,7 @@ testSuite.push(function testGetPointsEarned_incomplete() {
 
 testSuite.push(function testGetPointsEarned_complete() {
     let goal = new Goal({
-        completeDate: '2018-05-01T01:00:00-06:00',
+        completeDate: new Date(),
         points: 3
     });
 
@@ -114,9 +104,9 @@ testSuite.push(function testGetPointsEarned_complete() {
 testSuite.push(function testGetPointsEarned_incomplete_daily() {
     let goal = new Goal({
         dailyCompleteDates: [
-            '2018-04-30T23:00:00-06:00',
-            '2018-05-01T01:00:00-06:00',
-            '2018-05-02T23:00:00-06:00'
+            new Date(),
+            new Date(),
+            new Date()
         ],
         dailyBonusPoints: 10,
         points: 3
@@ -127,11 +117,11 @@ testSuite.push(function testGetPointsEarned_incomplete_daily() {
 
 testSuite.push(function testGetPointsEarned_complete_daily() {
     let goal = new Goal({
-        completeDate: '2018-05-02T23:00:00-06:00',
+        completeDate: new Date(),
         dailyCompleteDates: [
-            '2018-04-30T23:00:00-06:00',
-            '2018-05-01T01:00:00-06:00',
-            '2018-05-02T23:00:00-06:00'
+            new Date(),
+            new Date(),
+            new Date()
         ],
         dailyBonusPoints: 10,
         points: 3
@@ -151,7 +141,7 @@ testSuite.push(function testGetPointsRedeemed_unredeemed() {
 testSuite.push(function testGetPointsRedeemed_redeemed() {
     let reward = new Reward({
         points: 3,
-        redeemDate: '2018-05-02T23:00:00-06:00'
+        redeemDate: new Date()
     });
 
     assertEqual(3, reward.getPointsRedeemed());
