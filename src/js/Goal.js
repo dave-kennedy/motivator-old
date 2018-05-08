@@ -8,6 +8,7 @@ export default class Goal {
         this.draft = params.draft == undefined ? true : params.draft;
         this.name = params.name || '';
         this.points = params.points || 0;
+        this.repeat = params.repeat == undefined ? false : params.repeat;
 
         // daily streaks
         if (params.dailyCompleteDates && params.dailyCompleteDates.length) {
@@ -27,6 +28,22 @@ export default class Goal {
         this.completeDate = new Date();
         this._elem.find('.icon:first').flip(() => this._elem.fadeOut(() => this.remove()));
         $(document).trigger('goal.complete', this);
+
+        if (this.repeat) {
+            let goal = new Goal({
+                createDate: this.completeDate,
+                description: this.description,
+                draft: false,
+                name: this.name,
+                points: this.points,
+                repeat: true,
+                dailyDuration: this.dailyDuration,
+                dailyBonusPoints: this.dailyBonusPoints
+            });
+
+            goal.render();
+            $(document).trigger('goal.save', goal);
+        }
     }
 
     dailyComplete() {
@@ -157,7 +174,7 @@ export default class Goal {
                 </div>`).appendTo(elem).one('click', () => this.dailyComplete());
         } else {
             $(`<div class="icon mr-3">
-                    <span class="flip-up icon icon-circle"></span>
+                    <span class="flip-up icon ${this.repeat ? 'icon-repeat' : 'icon-circle'}"></span>
                     <span class="flip-down icon icon-check"></span>
                 </div>`).appendTo(elem).one('click', () => this.complete());
         }
@@ -217,6 +234,10 @@ export default class Goal {
                 <div class="form-group">
                     <label>Points</label>
                     <input autocapitalize="on" class="form-control" name="points" type="number" value="${this.points}">
+                </div>
+                <div class="form-group">
+                    <input class="mr-1" name="repeat" type="checkbox" ${this.repeat ? 'checked' : ''}>
+                    <label>Repeat goal when completed</label>
                 </div>
                 <div>
                     <a class="collapse-toggle collapsed" data-toggle="collapse" href="#daily">Daily</a>
@@ -320,6 +341,7 @@ export default class Goal {
         this.description = params.description || '';
         this.name = params.name || '';
         this.points = parseInt(params.points) || 0;
+        this.repeat = params.repeat == undefined ? false : params.repeat;
 
         this.dailyCompleteDates = [];
 
