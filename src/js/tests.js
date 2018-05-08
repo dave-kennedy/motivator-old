@@ -75,6 +75,34 @@ testSuite.push(function testGetDailyStreak_mostRecentTwoDaysAgo() {
     assertEqual(0, goal.getDailyStreak());
 });
 
+testSuite.push(function testGetDailyStreak_noDuration() {
+    let goal = new Goal({
+        dailyCompleteDates: [
+            makeDate(4, 23), // there's a gap between this date and the next, so it shouldn't count
+            makeDate(2, 1),
+            makeDate(1, 23),
+            makeDate(0, 1)
+        ]
+    });
+
+    assertEqual(3, goal.getDailyStreak());
+});
+
+testSuite.push(function testGetDailyStreak_exceedDuration() {
+    let goal = new Goal({
+        dailyCompleteDates: [
+            makeDate(4, 1),
+            makeDate(3, 23),
+            makeDate(2, 1),
+            makeDate(1, 23),
+            makeDate(0, 1)
+        ],
+        dailyDuration: 3
+    });
+
+    assertEqual(3, goal.getDailyStreak());
+});
+
 testSuite.push(function testGetDailyStreak_complete() {
     let goal = new Goal({
         completeDate: new Date(),

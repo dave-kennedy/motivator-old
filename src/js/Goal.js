@@ -11,14 +11,15 @@ export default class Goal {
         this.repeat = params.repeat == undefined ? false : params.repeat;
 
         // daily streaks
+        this.daily = params.daily == undefined ? false : params.daily;
+        this.dailyBonusPoints = params.dailyBonusPoints || 0;
+        this.dailyDuration = params.dailyDuration || 0;
+
         if (params.dailyCompleteDates && params.dailyCompleteDates.length) {
             this.dailyCompleteDates = params.dailyCompleteDates.map(d => new Date(d));
         } else {
             this.dailyCompleteDates = [];
         }
-
-        this.dailyDuration = params.dailyDuration || 0;
-        this.dailyBonusPoints = params.dailyBonusPoints || 0;
 
         // private fields, not saved
         this._elem = null;
@@ -37,6 +38,7 @@ export default class Goal {
                 name: this.name,
                 points: this.points,
                 repeat: true,
+                daily: this.daily,
                 dailyDuration: this.dailyDuration,
                 dailyBonusPoints: this.dailyBonusPoints
             });
@@ -50,9 +52,9 @@ export default class Goal {
         this.dailyCompleteDates.push(new Date());
 
         this._elem.find('.icon-fast-forward-sm').parent().html(`<span class="icon icon-sm icon-fast-forward-sm"></span>
-                ${this.getDailyStreak()}/${this.dailyDuration} days completed`);
+                ${this.dailyDuration ? this.getDailyStreak() + '/' + this.dailyDuration : this.getDailyStreak()} days completed`);
 
-        if (this.dailyDuration == this.getDailyStreak()) {
+        if (this.dailyDuration && this.dailyDuration == this.getDailyStreak()) {
             this.complete();
             return;
         }
@@ -63,11 +65,7 @@ export default class Goal {
 
     reset() {
         this.completeDate = null;
-
-        if (this.isDaily()) {
-            this.dailyCompleteDates = [];
-        }
-
+        this.dailyCompleteDates = [];
         this._elem.find('.icon:first').flip(() => this._elem.fadeOut(() => this.remove()));
         $(document).trigger('goal.reset', this);
     }
@@ -102,7 +100,7 @@ export default class Goal {
 
         dayBeforeMostRecentDate.setDate(dayBeforeMostRecentDate.getDate() - 1);
 
-        while (completeDates.length && dailyStreak < this.dailyDuration) {
+        while (completeDates.length && (!this.dailyDuration || dailyStreak < this.dailyDuration)) {
             mostRecentDate = completeDates.pop();
 
             if (mostRecentDate.toLocaleDateString() != dayBeforeMostRecentDate.toLocaleDateString()) {
@@ -136,10 +134,6 @@ export default class Goal {
         return this.completeDate != null;
     }
 
-    isDaily() {
-        return this.dailyDuration > 0;
-    }
-
     isDailyCompleted() {
         let today = new Date().toLocaleDateString();
 
@@ -167,7 +161,7 @@ export default class Goal {
             $(`<div class="icon mr-3 disabled">
                     <span class="icon icon-repeat"></span>
                 </div>`).appendTo(elem);
-        } else if (this.isDaily()) {
+        } else if (this.daily) {
             $(`<div class="icon mr-3">
                     <span class="flip-up icon icon-repeat"></span>
                     <span class="flip-down icon icon-check"></span>
@@ -195,9 +189,10 @@ export default class Goal {
                 </div>`).appendTo(details);
         }
 
-        if (this.isDaily()) {
+        if (this.daily) {
             $(`<div class="d-md-inline mr-md-5">
-                    <span class="icon icon-sm icon-fast-forward-sm"></span> ${this.getDailyStreak()}/${this.dailyDuration} days completed
+                    <span class="icon icon-sm icon-fast-forward-sm"></span>
+                    ${this.dailyDuration ? this.getDailyStreak() + '/' + this.dailyDuration : this.getDailyStreak()} days completed
                 </div>`).appendTo(details);
 
             if (this.dailyBonusPoints) {
@@ -239,28 +234,30 @@ export default class Goal {
                     <input class="mr-1" id="repeatInput" name="repeat" type="checkbox" ${this.repeat ? 'checked' : ''}>
                     <label for="repeatInput">Repeat goal when completed</label>
                 </div>
-                <div>
-                    <a class="collapse-toggle collapsed" data-toggle="collapse" href="#daily">Daily</a>
+                <div class="form-group">
+                    <input class="mr-1" data-toggle="collapse" data-target="#dailyDetails" id="dailyInput" name="daily" type="checkbox" ${this.daily ? 'checked' : ''}>
+                    <label for="dailyInput">Daily</label>
                 </div>
             </form>`).appendTo(body);
 
-        let daily = $(`<div class="collapse" id="daily">
-                <div class="form-group">
-                    <label>Duration</label>
-                    <input autocapitalize="on" class="form-control" name="dailyDuration" type="number" value="${this.dailyDuration}">
-                    <small class="form-text text-muted">How many days in a row should this goal be completed?</small>
-                </div>
-                <div class="form-group">
-                    <label>Bonus points</label>
-                    <input autocapitalize="on" class="form-control" name="dailyBonusPoints" type="number" value="${this.dailyBonusPoints}">
-                    <small class="form-text text-muted">How many points should be awarded when this goal is completed every day for the duration above?</small>
-                </div>
-            </div>`).appendTo(form);
+        let dailyDetails = $(`<div ${this.daily ? '' : 'class="collapse"'} id="dailyDetails"></div>`).appendTo(form);
+
+        let dailyDurationGroup = $(`<div class="form-group">
+                <label>Duration</label>
+                <input autocapitalize="on" class="form-control" name="dailyDuration" type="number" value="${this.dailyDuration}">
+                <small class="form-text text-muted">How many days in a row should this goal be completed? (0 = indefinite)</small>
+            </div>`).appendTo(dailyDetails).on('change', event => dailyBonusPointsGroup.children('input').prop('disabled', !(event.target.value > 0)));
+
+        let dailyBonusPointsGroup = $(`<div class="form-group">
+                <label>Bonus points</label>
+                <input autocapitalize="on" class="form-control" name="dailyBonusPoints" type="number" value="${this.dailyBonusPoints}" disabled>
+                <small class="form-text text-muted">How many points should be awarded when this goal is completed every day for the duration above?</small>
+            </div>`).appendTo(dailyDetails);
 
         if (this.dailyCompleteDates.length) {
-            let group = $(`<div class="form-group">
+            let dailyCompleteDatesGroup = $(`<div class="form-group">
                     <label>Dates completed</label>
-                </div>`).appendTo(daily);
+                </div>`).appendTo(dailyDetails);
 
             this.dailyCompleteDates.forEach((date, i) => {
                 $(`<div class="form-row mb-2">
@@ -270,12 +267,12 @@ export default class Goal {
                         <div class="col-6">
                             <input class="form-control" name="dailyCompleteTime[${i}]" type="time" value="${this._getISOTime(date)}">
                         </div>
-                    </div>`).appendTo(group);
+                    </div>`).appendTo(dailyCompleteDatesGroup);
             });
         }
 
         if (!this.draft) {
-            $(`<div>
+            $(`<div class="form-group">
                     <a class="collapse-toggle collapsed" data-toggle="collapse" href="#details">Details</a>
                 </div>`).appendTo(form);
 
@@ -343,19 +340,18 @@ export default class Goal {
         this.points = parseInt(params.points) || 0;
         this.repeat = params.repeat == undefined ? false : params.repeat;
 
-        this.dailyCompleteDates = [];
+        this.daily = params.daily == undefined ? false : params.daily;
+        this.dailyBonusPoints = parseInt(params.dailyBonusPoints) || 0;
+        this.dailyDuration = parseInt(params.dailyDuration) || 0;
 
-        Object.keys(params).filter(key => key.startsWith('dailyCompleteDate')).forEach(key => {
+        this.dailyCompleteDates = Object.keys(params).filter(key => key.startsWith('dailyCompleteDate')).map(key => {
             let dailyCompleteDate = params[key],
                 dailyCompleteTime = params[key.replace('Date', 'Time')];
 
             if (dailyCompleteDate && dailyCompleteTime) {
-                this.dailyCompleteDates.push(new Date(`${dailyCompleteDate}T${dailyCompleteTime}`));
+                return new Date(`${dailyCompleteDate}T${dailyCompleteTime}`);
             }
         });
-
-        this.dailyDuration = parseInt(params.dailyDuration) || 0;
-        this.dailyBonusPoints = parseInt(params.dailyBonusPoints) || 0;
 
         this.render();
         $(document).trigger('goal.save', this);
@@ -415,7 +411,7 @@ export default class Goal {
         let modal = $('#modal');
         modal.find('.modal-title').html('Confirm reset');
         modal.find('.modal-body').html(`<p>Are you sure you want to reset this goal?
-                ${this.isDaily() ? 'All daily completed dates will be lost.' : ''}</p>`);
+                ${this.daily ? 'All daily completed dates will be lost.' : ''}</p>`);
 
         let footer = modal.find('.modal-footer').empty();
         $('<button class="btn btn-danger mr-auto" data-dismiss="modal">Yes</button>').appendTo(footer).on('click', () => this.reset());

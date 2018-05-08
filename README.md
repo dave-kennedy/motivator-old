@@ -11,7 +11,7 @@ features:
 
 ### To do
 
-* Daily goals w/out duration
+* Enhance validation
 * Fix capitalization in text fields
 * Save on enter key
 * Enhance tutorial
