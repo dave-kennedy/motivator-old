@@ -236,8 +236,8 @@ export default class Goal {
                     <input autocapitalize="on" class="form-control" name="points" type="number" value="${this.points}">
                 </div>
                 <div class="form-group">
-                    <input class="mr-1" name="repeat" type="checkbox" ${this.repeat ? 'checked' : ''}>
-                    <label>Repeat goal when completed</label>
+                    <input class="mr-1" id="repeatInput" name="repeat" type="checkbox" ${this.repeat ? 'checked' : ''}>
+                    <label for="repeatInput">Repeat goal when completed</label>
                 </div>
                 <div>
                     <a class="collapse-toggle collapsed" data-toggle="collapse" href="#daily">Daily</a>

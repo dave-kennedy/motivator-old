@@ -12,7 +12,6 @@ features:
 ### To do
 
 * Daily goals w/out duration
-* Fix labels
 * Fix capitalization in text fields
 * Save on enter key
 * Enhance tutorial
