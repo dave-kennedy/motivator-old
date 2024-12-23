@@ -1,3 +1,9 @@
+This repository is archived. Future development can be found
+[here](https://github.com/dave-kennedy/motivator). Please update your bookmarks
+accordingly.
+
+---
+
 Motivator is a web app that can help you build good habits and break bad ones.
 
 There are a lot of other apps for tracking goals and habits, but I couldn't find
